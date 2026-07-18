@@ -5,10 +5,12 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { CarpetBackground } from "@/components/carpet-background";
 import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge, parseDateParts } from "@/lib/utils";
+import { getPagePath } from "@/lib/navigate";
 import { ArrowLeft, Users, User, Camera, Calendar } from "lucide-react";
 
 export default function StatisticsPage() {
@@ -68,30 +70,31 @@ export default function StatisticsPage() {
   if (!family) return null;
 
   return (
-    <div className="min-h-screen bg-background paper-texture">
-      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-card/90 px-4 py-3 backdrop-blur sm:px-6">
+    <div className="relative min-h-screen carpet-texture">
+      <CarpetBackground />
+      <header className="carpet-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <Link href="/tree">
-            <Button variant="ghost" size="icon">
+          <Link href={getPagePath("/tree")}>
+            <Button variant="ghost" size="icon" className="text-foreground hover:bg-accent/10 hover:text-accent">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           <div className="flex items-center gap-3">
             <Logo size={36} />
-            <h1 className="text-lg font-semibold text-foreground">Статистика</h1>
+            <h1 className="text-lg font-bold text-foreground">Статистика</h1>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+      <main className="relative z-10 mx-auto max-w-3xl px-4 py-8 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-6"
         >
-          <Card className="border-border bg-card">
+          <Card className="carpet-card border-0">
             <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-semibold text-primary">Статистика семьи</h2>
+              <h2 className="text-2xl font-bold text-accent">Статистика семьи</h2>
               <OrnamentDivider className="mx-auto mt-3 w-32" />
               <p className="mt-4 text-muted-foreground">
                 Цифры, поколения и интересные факты о вашем роде.
@@ -107,10 +110,10 @@ export default function StatisticsPage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <Card className="border-border bg-card">
+            <Card className="carpet-card border-0">
               <CardContent className="space-y-3 p-5">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
+                  <Calendar className="h-4 w-4 text-accent" />
                   <span className="text-sm">Возраст</span>
                 </div>
                 <div className="space-y-1 text-sm">
@@ -127,10 +130,10 @@ export default function StatisticsPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-border bg-card">
+            <Card className="carpet-card border-0">
               <CardContent className="space-y-3 p-5">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Users className="h-4 w-4" />
+                  <Users className="h-4 w-4 text-accent" />
                   <span className="text-sm">Поколения</span>
                 </div>
                 <div className="space-y-1 text-sm">
@@ -146,9 +149,9 @@ export default function StatisticsPage() {
           </div>
 
           {Object.keys(stats.decades).length > 0 && (
-            <Card className="border-border bg-card">
+            <Card className="carpet-card border-0">
               <CardContent className="p-5">
-                <h3 className="mb-4 text-sm font-medium text-secondary-foreground">Десятилетия рождений</h3>
+                <h3 className="mb-4 text-sm font-medium text-accent">Десятилетия рождений</h3>
                 <div className="space-y-3">
                   {Object.entries(stats.decades)
                     .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
@@ -182,10 +185,10 @@ export default function StatisticsPage() {
 
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
   return (
-    <Card className="border-border bg-card">
+    <Card className="carpet-card border-0">
       <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
-        <div className="text-primary">{icon}</div>
-        <span className="text-2xl font-semibold text-foreground">{value}</span>
+        <div className="text-accent">{icon}</div>
+        <span className="text-2xl font-bold text-foreground">{value}</span>
         <span className="text-xs text-muted-foreground">{label}</span>
       </CardContent>
     </Card>

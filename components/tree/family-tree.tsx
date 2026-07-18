@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { PersonCard } from "@/components/person-card";
 import { useFamilyStore } from "@/lib/store";
 import { Person } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { navigateTo } from "@/lib/navigate";
 import { ConnectDialog } from "@/components/tree/connect-dialog";
 import { Button } from "@/components/ui/button";
 import { ZoomIn, ZoomOut, Maximize } from "lucide-react";
@@ -100,7 +100,6 @@ function buildTreeLayout(people: Person[]): TreeNode[] {
 }
 
 export function FamilyTree({ className }: { className?: string }) {
-  const router = useRouter();
   const people = useFamilyStore((state) => state.family?.people || []);
   const selectedId = useFamilyStore((state) => state.selectedPersonId);
   const setSelectedId = useFamilyStore((state) => state.setSelectedPersonId);
@@ -190,7 +189,7 @@ export function FamilyTree({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "relative h-full w-full cursor-grab overflow-hidden bg-background paper-texture active:cursor-grabbing",
+        "relative h-full w-full cursor-grab overflow-hidden bg-background carpet-texture active:cursor-grabbing",
         className
       )}
       onWheel={handleWheel}
@@ -200,13 +199,13 @@ export function FamilyTree({ className }: { className?: string }) {
       onMouseLeave={handleMouseUp}
     >
       <div className="absolute right-4 bottom-4 z-10 flex flex-col gap-2">
-        <Button variant="secondary" size="icon" onClick={() => setScale((s) => Math.min(s * 1.2, 2.5))}>
+        <Button variant="secondary" size="icon" className="carpet-card border-0" onClick={() => setScale((s) => Math.min(s * 1.2, 2.5))}>
           <ZoomIn className="h-4 w-4" />
         </Button>
-        <Button variant="secondary" size="icon" onClick={() => setScale((s) => Math.max(s / 1.2, 0.3))}>
+        <Button variant="secondary" size="icon" className="carpet-card border-0" onClick={() => setScale((s) => Math.max(s / 1.2, 0.3))}>
           <ZoomOut className="h-4 w-4" />
         </Button>
-        <Button variant="secondary" size="icon" onClick={centerTree}>
+        <Button variant="secondary" size="icon" className="carpet-card border-0" onClick={centerTree}>
           <Maximize className="h-4 w-4" />
         </Button>
       </div>
@@ -237,7 +236,7 @@ export function FamilyTree({ className }: { className?: string }) {
               isSelected={selectedId === node.person.id}
               onClick={() => {
                 setSelectedId(node.person.id);
-                router.push(`/person/${node.person.id}`);
+                navigateTo(`/person/${node.person.id}`);
               }}
               onDragStart={() => setSelectedId(node.person.id)}
               onDrop={() => {

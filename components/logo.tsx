@@ -12,41 +12,63 @@ export function Logo({ className, size = 40 }: LogoProps) {
     <svg
       width={size}
       height={size}
-      viewBox="0 0 108 108"
+      viewBox="0 0 120 120"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={cn("shrink-0", className)}
     >
-      <rect width="108" height="108" fill="currentColor" className="text-primary" />
+      <defs>
+        <linearGradient id="logoGrad" x1="0" y1="0" x2="120" y2="120">
+          <stop offset="0%" stopColor="var(--primary)" />
+          <stop offset="100%" stopColor="var(--accent)" />
+        </linearGradient>
+      </defs>
+
+      <rect width="120" height="120" rx="16" fill="url(#logoGrad)" />
+
       <path
-        d="M20 84V54C20 32 36 16 54 16C72 16 88 32 88 54V84"
-        stroke="currentColor"
+        d="M20 96V60C20 34 40 14 60 14C80 14 100 34 100 60V96"
+        stroke="var(--accent-foreground)"
         strokeWidth="4"
-        className="text-accent"
-      />
-      <path
-        d="M54 30C46 30 40 37 40 45C40 53 46 60 54 60C50 60 46 53 46 45C46 37 50 30 54 30Z"
-        fill="currentColor"
-        className="text-accent"
-      />
-      <path
-        d="M54 22L56 28H62L57 32L59 38L54 34L49 38L51 32L46 28H52L54 22Z"
-        fill="currentColor"
-        className="text-accent"
-      />
-      <path
-        d="M54 68V52M54 56L42 46M54 56L66 46M42 46L38 40M66 46L70 40"
-        stroke="currentColor"
-        strokeWidth="3.5"
+        fill="none"
         strokeLinecap="round"
-        className="text-accent"
       />
-      <circle cx="38" cy="40" r="5" fill="currentColor" className="text-accent" />
-      <circle cx="70" cy="40" r="5" fill="currentColor" className="text-accent" />
-      <circle cx="42" cy="46" r="4.5" fill="currentColor" className="text-accent" />
-      <circle cx="66" cy="46" r="4.5" fill="currentColor" className="text-accent" />
-      <circle cx="54" cy="52" r="5.5" fill="currentColor" className="text-accent" />
-      <path d="M16 84H92" stroke="currentColor" strokeWidth="3" className="text-accent" />
+      <path
+        d="M20 96H100"
+        stroke="var(--accent-foreground)"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M60 28C52 28 46 36 46 46C46 56 52 64 60 64C56 64 52 56 52 46C52 36 56 28 60 28Z"
+        fill="var(--accent-foreground)"
+      />
+
+      <path
+        d="M60 20L62.5 27H70L64 32L66.5 40L60 35L53.5 40L56 32L50 27H57.5L60 20Z"
+        fill="var(--accent-foreground)"
+      />
+
+      <g stroke="var(--accent-foreground)" strokeWidth="3" strokeLinecap="round">
+        <path d="M60 74V56" />
+        <path d="M60 60L46 48" />
+        <path d="M60 60L74 48" />
+        <path d="M46 48L42 42" />
+        <path d="M74 48L78 42" />
+      </g>
+
+      <circle cx="42" cy="42" r="5" fill="var(--accent-foreground)" />
+      <circle cx="78" cy="42" r="5" fill="var(--accent-foreground)" />
+      <circle cx="46" cy="48" r="4.5" fill="var(--accent-foreground)" />
+      <circle cx="74" cy="48" r="4.5" fill="var(--accent-foreground)" />
+      <circle cx="60" cy="56" r="5.5" fill="var(--accent-foreground)" />
+
+      <circle cx="60" cy="86" r="8" fill="var(--accent-foreground)" />
+      <path
+        d="M52 86C52 82 56 78 60 78C64 78 68 82 68 86C68 90 64 94 60 94C56 94 52 90 52 86Z"
+        fill="var(--primary)"
+      />
     </svg>
   );
 }

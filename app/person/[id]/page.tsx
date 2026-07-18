@@ -19,6 +19,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { PersonAvatar } from "@/components/person-avatar";
 import { OrnamentDivider } from "@/components/ornament";
+import { CarpetBackground } from "@/components/carpet-background";
 import { AddPersonDialog } from "@/components/add-person-dialog";
 import { PhotoUpload } from "@/components/photo-upload";
 import { useFamilyStore } from "@/lib/store";
@@ -31,6 +32,7 @@ import {
   RELATIONSHIP_LABELS,
 } from "@/lib/types";
 import { calculateAge, formatDateInput, isValidDate, cn } from "@/lib/utils";
+import { navigateTo, getPagePath } from "@/lib/navigate";
 import {
   ArrowLeft,
   Calendar,
@@ -40,6 +42,7 @@ import {
   Link as LinkIcon,
   X,
   Users,
+  Save,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -79,7 +82,7 @@ export default function PersonPage() {
 
   if (!family || !person) {
     if (typeof window !== "undefined") {
-      router.replace("/");
+      navigateTo("/");
     }
     return null;
   }
@@ -106,7 +109,7 @@ export default function PersonPage() {
     if (!person) return;
     if (confirm("Удалить человека из семейного дерева?")) {
       deletePerson(person.id);
-      router.push("/tree");
+      navigateTo("/tree");
     }
   }
 
@@ -127,37 +130,39 @@ export default function PersonPage() {
   const age = calculateAge(person.birthDate);
 
   return (
-    <div className="min-h-screen bg-background paper-texture">
-      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-card/90 px-4 py-3 backdrop-blur sm:px-6">
+    <div className="relative min-h-screen carpet-texture">
+      <CarpetBackground />
+      <header className="carpet-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <Link href="/tree">
-            <Button variant="ghost" size="icon">
+          <Link href={getPagePath("/tree")}>
+            <Button variant="ghost" size="icon" className="text-foreground hover:bg-accent/10 hover:text-accent">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <h1 className="text-lg font-semibold text-foreground">Профиль</h1>
+          <h1 className="text-lg font-bold text-foreground">Профиль</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsEditing(!isEditing)}
+            className="text-foreground hover:bg-accent/10 hover:text-accent"
           >
             <Edit2 className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleDelete}>
+          <Button variant="ghost" size="icon" onClick={handleDelete} className="hover:bg-destructive/10">
             <Trash2 className="h-5 w-5 text-destructive" />
           </Button>
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+      <main className="relative z-10 mx-auto max-w-3xl px-4 py-8 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-6"
         >
-          <Card className="overflow-hidden border-border bg-card">
+          <Card className="carpet-card overflow-hidden border-0">
             <CardContent className="flex flex-col items-center gap-4 p-8">
               <PersonAvatar
                 src={person.photoUrl}
@@ -188,7 +193,7 @@ export default function PersonPage() {
                   </div>
                 ) : (
                   <>
-                    <h2 className="text-2xl font-semibold text-primary">
+                    <h2 className="text-2xl font-bold text-accent">
                       {person.firstName} {person.lastName}
                     </h2>
                     <p className="text-muted-foreground">
@@ -201,10 +206,10 @@ export default function PersonPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-border bg-card">
+          <Card className="carpet-card border-0">
             <CardContent className="space-y-4 p-6">
               <DetailRow
-                icon={<Calendar className="h-4 w-4" />}
+                icon={<Calendar className="h-4 w-4 text-accent" />}
                 label="Дата рождения"
                 value={person.birthDate || "—"}
                 editing={isEditing}
@@ -215,12 +220,12 @@ export default function PersonPage() {
                 inputMode="date"
               />
               <DetailRow
-                icon={<User className="h-4 w-4" />}
+                icon={<User className="h-4 w-4 text-accent" />}
                 label="Возраст"
                 value={age !== null ? `${age} лет` : "—"}
               />
               <DetailRow
-                icon={<User className="h-4 w-4" />}
+                icon={<User className="h-4 w-4 text-accent" />}
                 label="Пол"
                 value={GENDER_LABELS[person.gender]}
                 editing={isEditing}
@@ -231,7 +236,7 @@ export default function PersonPage() {
                 }
               />
               <DetailRow
-                icon={<Users className="h-4 w-4" />}
+                icon={<Users className="h-4 w-4 text-accent" />}
                 label="Родитель/супруг"
                 value={parent ? `${parent.firstName} ${parent.lastName}` : "—"}
               />
@@ -239,9 +244,9 @@ export default function PersonPage() {
           </Card>
 
           {(person.notes || isEditing) && (
-            <Card className="border-border bg-card">
+            <Card className="carpet-card border-0">
               <CardContent className="p-6">
-                <h3 className="mb-2 text-sm font-medium text-secondary-foreground">
+                <h3 className="mb-2 text-sm font-medium text-accent">
                   Заметки
                 </h3>
                 {isEditing ? (
@@ -251,6 +256,7 @@ export default function PersonPage() {
                       setEditForm({ ...editForm, notes: e.target.value })
                     }
                     rows={4}
+                    className="border-border bg-background"
                   />
                 ) : (
                   <p className="whitespace-pre-wrap text-foreground">
@@ -264,23 +270,24 @@ export default function PersonPage() {
           {isEditing && (
             <Button
               onClick={handleSave}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              className="carpet-button w-full"
             >
+              <Save className="mr-2 h-4 w-4" />
               Сохранить изменения
             </Button>
           )}
 
-          <Card className="border-border bg-card">
+          <Card className="carpet-card border-0">
             <CardContent className="p-6">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-primary">Галерея</h3>
+                <h3 className="text-lg font-semibold text-accent">Галерея</h3>
                 <div className="flex items-center gap-2">
                   <PhotoUpload onUpload={handleAddUploadedPhoto} />
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={handleAddPhotoUrl}
-                    className="gap-1 border-border"
+                    className="gap-1 border-border bg-background hover:border-accent hover:text-accent"
                   >
                     <LinkIcon className="h-4 w-4" />
                     URL
@@ -288,7 +295,7 @@ export default function PersonPage() {
                 </div>
               </div>
               {personPhotos.length === 0 ? (
-                <div className="rounded-lg border border-dashed border-border p-8 text-center text-muted-foreground">
+                <div className="rounded-lg border border-dashed border-border bg-background/50 p-8 text-center text-muted-foreground">
                   В личной галерее пока нет фотографий
                 </div>
               ) : (
@@ -305,12 +312,12 @@ export default function PersonPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-border bg-card">
+          <Card className="carpet-card border-0">
             <CardContent className="p-6">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-primary">Дети и родственники</h3>
+                <h3 className="text-lg font-semibold text-accent">Дети и родственники</h3>
                 <AddPersonDialog defaultParentId={person.id}>
-                  <Button variant="outline" size="sm" className="gap-1 border-border">
+                  <Button variant="outline" size="sm" className="gap-1 border-border bg-background hover:border-accent hover:text-accent">
                     <User className="h-4 w-4" />
                     Добавить
                   </Button>
@@ -323,8 +330,8 @@ export default function PersonPage() {
               ) : (
                 <div className="space-y-2">
                   {children.map((child) => (
-                    <Link key={child.id} href={`/person/${child.id}`}>
-                      <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-3 transition-colors hover:bg-secondary">
+                    <Link key={child.id} href={getPagePath(`/person/${child.id}`)}>
+                      <div className="carpet-card flex items-center gap-3 border p-3 transition-colors hover:border-accent hover:bg-accent/5">
                         <PersonAvatar
                           src={child.photoUrl}
                           name={`${child.firstName} ${child.lastName}`}
@@ -381,7 +388,7 @@ function DetailRow({
       {editing ? (
         editType === "gender" ? (
           <Select value={editValue} onValueChange={(v) => onEditChange?.(v ?? "")}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-40 border-border bg-background">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -396,7 +403,7 @@ function DetailRow({
           <Input
             value={editValue}
             onChange={(e) => onEditChange?.(e.target.value)}
-            className="w-40"
+            className="w-40 border-border bg-background"
             inputMode={inputMode === "date" ? "numeric" : "text"}
           />
         )
@@ -409,7 +416,7 @@ function DetailRow({
 
 function PhotoCard({ photo, onDelete }: { photo: Photo; onDelete: () => void }) {
   return (
-    <div className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-card">
+    <div className="carpet-card group relative aspect-square overflow-hidden rounded-xl border">
       <img
         src={photo.url}
         alt={photo.caption || "Фото"}

@@ -19,10 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Gender, Person, RelationshipType, GENDER_LABELS, RELATIONSHIP_LABELS } from "@/lib/types";
+import { Gender, RelationshipType, GENDER_LABELS, RELATIONSHIP_LABELS } from "@/lib/types";
 import { useFamilyStore } from "@/lib/store";
 import { formatDateInput, isValidDate } from "@/lib/utils";
-import { Plus } from "lucide-react";
+import { Plus, Save } from "lucide-react";
+import { PhotoUpload } from "@/components/photo-upload";
 
 interface AddPersonDialogProps {
   defaultParentId?: string;
@@ -43,6 +44,10 @@ export function AddPersonDialog({ defaultParentId, children }: AddPersonDialogPr
 
   function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
     setBirthDate(formatDateInput(e.target.value));
+  }
+
+  function handleUploaded(url: string) {
+    setPhotoUrl(url);
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -82,15 +87,15 @@ export function AddPersonDialog({ defaultParentId, children }: AddPersonDialogPr
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         {children || (
-          <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button className="carpet-button gap-2">
             <Plus className="h-4 w-4" />
             Добавить родственника
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="border-border bg-card sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-primary">Добавить человека</DialogTitle>
+          <DialogTitle className="text-accent">Добавить человека</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid grid-cols-2 gap-4">
@@ -101,6 +106,7 @@ export function AddPersonDialog({ defaultParentId, children }: AddPersonDialogPr
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Имя"
+                className="border-border bg-background"
               />
             </div>
             <div className="space-y-2">
@@ -110,6 +116,7 @@ export function AddPersonDialog({ defaultParentId, children }: AddPersonDialogPr
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="Фамилия"
+                className="border-border bg-background"
               />
             </div>
           </div>
@@ -122,7 +129,7 @@ export function AddPersonDialog({ defaultParentId, children }: AddPersonDialogPr
               onChange={handleDateChange}
               placeholder="ДД.ММ.ГГГГ"
               inputMode="numeric"
-              className="date-mask"
+              className="date-mask border-border bg-background"
             />
             <p className="text-xs text-muted-foreground">
               Вводите цифры подряд: 12051990 → 12.05.1990
@@ -133,7 +140,7 @@ export function AddPersonDialog({ defaultParentId, children }: AddPersonDialogPr
             <div className="space-y-2">
               <Label>Пол</Label>
               <Select value={gender} onValueChange={(v) => setGender(v as Gender)}>
-                <SelectTrigger>
+                <SelectTrigger className="border-border bg-background">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,7 +155,7 @@ export function AddPersonDialog({ defaultParentId, children }: AddPersonDialogPr
             <div className="space-y-2">
               <Label>Степень родства</Label>
               <Select value={relationship} onValueChange={(v) => setRelationship(v as RelationshipType)}>
-                <SelectTrigger>
+                <SelectTrigger className="border-border bg-background">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -163,13 +170,23 @@ export function AddPersonDialog({ defaultParentId, children }: AddPersonDialogPr
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="photoUrl">Ссылка на фотографию</Label>
+            <Label>Фотография</Label>
+            <div className="flex items-center gap-2">
+              <PhotoUpload onUpload={handleUploaded} className="border-border bg-background hover:border-accent hover:text-accent" />
+              <span className="text-xs text-muted-foreground">или вставьте ссылку ниже</span>
+            </div>
             <Input
               id="photoUrl"
               value={photoUrl}
               onChange={(e) => setPhotoUrl(e.target.value)}
               placeholder="https://..."
+              className="border-border bg-background"
             />
+            {photoUrl && (
+              <div className="mt-2 aspect-video w-20 overflow-hidden rounded-lg border border-border">
+                <img src={photoUrl} alt="Предпросмотр" className="h-full w-full object-cover" />
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -180,12 +197,14 @@ export function AddPersonDialog({ defaultParentId, children }: AddPersonDialogPr
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Расскажите о человеке..."
               rows={3}
+              className="border-border bg-background"
             />
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
-          <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button type="submit" className="carpet-button">
+            <Save className="mr-2 h-4 w-4" />
             Сохранить
           </Button>
         </form>

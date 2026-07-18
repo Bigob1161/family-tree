@@ -1,85 +1,68 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
+import { CarpetBackground } from "@/components/carpet-background";
 import { useFamilyStore } from "@/lib/store";
-import { TreePine } from "lucide-react";
+import { navigateTo } from "@/lib/navigate";
+import { TreePine, Users } from "lucide-react";
 
 export default function LandingPage() {
-  const router = useRouter();
   const family = useFamilyStore((state) => state.family);
   const createFamily = useFamilyStore((state) => state.createFamily);
 
   useEffect(() => {
     if (family) {
-      router.replace("/tree");
+      navigateTo("/tree");
     }
-  }, [family, router]);
+  }, [family]);
 
   function handleCreate() {
     createFamily("Моя семья");
-    router.push("/tree");
+    navigateTo("/tree");
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background paper-texture px-6 text-center">
-      <div className="pointer-events-none absolute inset-0 opacity-30">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern
-              id="ornament"
-              x="0"
-              y="0"
-              width="80"
-              height="80"
-              patternUnits="userSpaceOnUse"
-            >
-              <circle cx="40" cy="40" r="1.5" fill="currentColor" className="text-accent/40" />
-              <path
-                d="M20 20h40v40H20z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.5"
-                className="text-accent/20"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#ornament)" />
-        </svg>
-      </div>
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden carpet-texture px-6 text-center">
+      <CarpetBackground />
+
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/60" />
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative z-10 flex flex-col items-center gap-6"
+        transition={{ duration: 0.9, ease: "easeOut" }}
+        className="relative z-10 flex flex-col items-center gap-8"
       >
         <motion.div
-          initial={{ scale: 0.8, rotate: -10 }}
+          initial={{ scale: 0.6, rotate: -8 }}
           animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.2 }}
+          className="relative"
         >
-          <Logo size={120} />
+          <div className="absolute inset-0 rounded-3xl bg-accent/20 blur-2xl" />
+          <Logo size={140} className="relative" />
         </motion.div>
 
-        <h1 className="max-w-md text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-          Семейный архив
-        </h1>
-        <p className="max-w-sm text-lg text-muted-foreground">
-          Цифровой музей памяти вашего рода. Сохраняйте истории, фотографии и связи поколений.
-        </p>
+        <div className="space-y-3">
+          <h1 className="max-w-lg text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
+            Семейный архив
+          </h1>
+          <p className="mx-auto max-w-md text-lg text-muted-foreground">
+            Цифровой музей памяти вашего рода. Сохраняйте истории, фотографии и связи поколений во восточном узоре.
+          </p>
+        </div>
 
-        <OrnamentDivider className="w-40" />
+        <OrnamentDivider className="w-48 text-accent" />
 
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-col gap-4 sm:flex-row">
           <Button
             size="lg"
             onClick={handleCreate}
-            className="gap-2 bg-primary px-8 text-primary-foreground hover:bg-primary/90"
+            className="carpet-button h-12 gap-2 px-8 text-base font-semibold text-primary-foreground"
           >
             <TreePine className="h-5 w-5" />
             Создать семейное древо
@@ -87,11 +70,27 @@ export default function LandingPage() {
           <Button
             size="lg"
             variant="outline"
-            onClick={() => router.push("/tree")}
-            className="border-border px-8 hover:bg-secondary"
+            onClick={() => navigateTo("/tree")}
+            className="h-12 gap-2 border-2 border-accent/50 px-8 text-base font-semibold text-foreground hover:bg-accent/10 hover:text-accent"
           >
+            <Users className="h-5 w-5" />
             Войти в архив
           </Button>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4 pt-8 text-center text-sm text-muted-foreground">
+          <div className="carpet-card rounded-xl p-4">
+            <div className="text-2xl font-bold text-accent">∞</div>
+            <div>Родственники</div>
+          </div>
+          <div className="carpet-card rounded-xl p-4">
+            <div className="text-2xl font-bold text-primary">📸</div>
+            <div>Фотогалерея</div>
+          </div>
+          <div className="carpet-card rounded-xl p-4">
+            <div className="text-2xl font-bold text-secondary">📅</div>
+            <div>Хронология</div>
+          </div>
         </div>
       </motion.div>
     </main>

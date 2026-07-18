@@ -1,11 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { PersonAvatar } from "@/components/person-avatar";
 import { Card } from "@/components/ui/card";
 import { calculateAge, cn } from "@/lib/utils";
 import { Person } from "@/lib/types";
 import { RELATIONSHIP_LABELS } from "@/lib/types";
+import { AnimatedTooltip } from "@/components/animated-tooltip";
 
 interface PersonCardProps {
   person: Person;
@@ -28,50 +28,68 @@ export function PersonCard({
 }: PersonCardProps) {
   const age = calculateAge(person.birthDate);
 
-  function handleDragStart(e: React.DragEvent) {
+  function handleDragStart(e: React.DragEvent<HTMLDivElement>) {
     e.dataTransfer.setData("personId", person.id);
+    e.dataTransfer.effectAllowed = "link";
     onDragStart?.();
   }
 
-  function handleDragOver(e: React.DragEvent) {
+  function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
+    e.dataTransfer.dropEffect = "link";
   }
 
-  function handleDrop(e: React.DragEvent) {
+  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
+    e.stopPropagation();
     onDrop?.();
   }
 
-  return (
-    <motion.div
-      layoutId={person.id}
-      draggable={false}
-      onClick={onClick}
-      whileHover={{ scale: 1.03, y: -4 }}
-      whileTap={{ scale: 0.98 }}
-      style={style}
-      className={cn(
-        "absolute cursor-grab active:cursor-grabbing",
-        className
+  const tooltipContent = (
+    <div className="text-center">
+      <p className="font-semibold text-accent">{person.firstName} {person.lastName}</p>
+      <p className="text-xs text-muted-foreground">
+        {age !== null ? `${age} лет` : RELATIONSHIP_LABELS[person.relationshipType]}
+      </p>
+      {person.birthDate && (
+        <p className="text-xs text-muted-foreground">{person.birthDate}</p>
       )}
-    >
-      <Card
+    </div>
+  );
+
+  return (
+    <AnimatedTooltip content={tooltipContent}>
+      <div
+        draggable
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onClick={onClick}
+        onMouseDown={(e) => e.preventDefault()}
+        style={style}
         className={cn(
-          "flex w-36 flex-col items-center gap-2 border border-border bg-card p-3 shadow-md transition-shadow",
-          isSelected && "ring-2 ring-primary shadow-xl"
+          "group absolute cursor-grab select-none transition-all duration-200 ease-out active:cursor-grabbing hover:z-10 hover:scale-105 hover:-translate-y-1.5",
+          className
         )}
       >
-        <PersonAvatar src={person.photoUrl} name={`${person.firstName} ${person.lastName}`} size="md" />
-        <div className="text-center">
-          <p className="truncate text-sm font-semibold text-card-foreground">
-            {person.firstName}
-          </p>
-          <p className="truncate text-xs text-muted-foreground">{person.lastName}</p>
-          <p className="mt-1 text-xs text-accent font-medium">
-            {age !== null ? `${age} лет` : RELATIONSHIP_LABELS[person.relationshipType]}
-          </p>
-        </div>
-      </Card>
-    </motion.div>
+        <Card
+          className={cn(
+            "carpet-card flex w-36 flex-col items-center gap-2 bg-card/95 p-3 backdrop-blur-sm transition-all",
+            isSelected && "ring-2 ring-accent shadow-xl shadow-accent/20"
+          )}
+        >
+          <PersonAvatar src={person.photoUrl} name={`${person.firstName} ${person.lastName}`} size="md" />
+          <div className="text-center">
+            <p className="truncate text-sm font-bold text-card-foreground">
+              {person.firstName}
+            </p>
+            <p className="truncate text-xs text-muted-foreground">{person.lastName}</p>
+            <p className="mt-1 text-xs font-medium text-accent">
+              {age !== null ? `${age} лет` : RELATIONSHIP_LABELS[person.relationshipType]}
+            </p>
+          </div>
+        </Card>
+      </div>
+    </AnimatedTooltip>
   );
 }

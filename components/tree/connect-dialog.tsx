@@ -35,16 +35,16 @@ const options: RelationshipType[] = [
 export function ConnectDialog({ onClose, onConnect }: ConnectDialogProps) {
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="border-border bg-card sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-primary">Какая связь между ними?</DialogTitle>
+          <DialogTitle className="text-accent">Какая связь между ними?</DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-2 py-4">
           {options.map((rel) => (
             <Button
               key={rel}
               variant="outline"
-              className="justify-start border-border hover:bg-secondary hover:text-secondary-foreground"
+              className="justify-start border-border bg-background hover:border-accent hover:text-accent"
               onClick={() => onConnect(rel)}
             >
               {RELATIONSHIP_LABELS[rel]}

@@ -5,11 +5,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { CarpetBackground } from "@/components/carpet-background";
 import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
 import { PersonAvatar } from "@/components/person-avatar";
 import { useFamilyStore } from "@/lib/store";
 import { parseDateParts } from "@/lib/utils";
+import { getPagePath } from "@/lib/navigate";
 import { ArrowLeft, Calendar } from "lucide-react";
 
 export default function TimelinePage() {
@@ -38,30 +40,31 @@ export default function TimelinePage() {
   if (!family) return null;
 
   return (
-    <div className="min-h-screen bg-background paper-texture">
-      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-card/90 px-4 py-3 backdrop-blur sm:px-6">
+    <div className="relative min-h-screen carpet-texture">
+      <CarpetBackground />
+      <header className="carpet-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <Link href="/tree">
-            <Button variant="ghost" size="icon">
+          <Link href={getPagePath("/tree")}>
+            <Button variant="ghost" size="icon" className="text-foreground hover:bg-accent/10 hover:text-accent">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           <div className="flex items-center gap-3">
             <Logo size={36} />
-            <h1 className="text-lg font-semibold text-foreground">История семьи</h1>
+            <h1 className="text-lg font-bold text-foreground">История семьи</h1>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+      <main className="relative z-10 mx-auto max-w-2xl px-4 py-8 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-6"
         >
-          <Card className="border-border bg-card">
+          <Card className="carpet-card border-0">
             <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-semibold text-primary">Хронология рода</h2>
+              <h2 className="text-2xl font-bold text-accent">Хронология рода</h2>
               <OrnamentDivider className="mx-auto mt-3 w-32" />
               <p className="mt-4 text-muted-foreground">
                 Важные события и поколения вашей семьи в порядке времени.
@@ -70,7 +73,7 @@ export default function TimelinePage() {
           </Card>
 
           {events.length === 0 ? (
-            <Card className="border-border bg-card">
+            <Card className="carpet-card border-0">
               <CardContent className="p-8 text-center text-muted-foreground">
                 <Calendar className="mx-auto mb-3 h-10 w-10 text-accent" />
                 Пока нет событий. Добавьте даты рождения родственникам, чтобы увидеть историю семьи.
@@ -88,8 +91,8 @@ export default function TimelinePage() {
                   className="relative"
                 >
                   <div className="absolute -left-3 top-4 h-3 w-3 -translate-x-1/2 rounded-full bg-accent ring-2 ring-background" />
-                  <Link href={`/person/${event.person.id}`}>
-                    <Card className="border-border bg-card transition-colors hover:bg-secondary">
+                  <Link href={getPagePath(`/person/${event.person.id}`)}>
+                    <Card className="carpet-card border-0 transition-colors hover:border-accent hover:bg-accent/5">
                       <CardContent className="flex items-center gap-4 p-4">
                         <PersonAvatar
                           src={event.person.photoUrl}
