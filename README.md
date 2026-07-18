@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Family Archive — семейное древо
 
-## Getting Started
+Цифровой семейный архив в восточном стиле. Интерактивное семейное древо, профили, фотогалереи, важные даты, темная тема и анимации.
 
-First, run the development server:
+## Технологии
+
+- [Next.js 16](https://nextjs.org/) (статический экспорт)
+- [React 19](https://react.dev/) + [TypeScript 5](https://www.typescriptlang.org/)
+- [Tailwind CSS v4](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/) (Base UI)
+- [Zustand](https://github.com/pmndrs/zustand) + persist (хранение данных в `localStorage`)
+- [Framer Motion](https://www.framer.com/motion/) (анимации)
+- [Lucide React](https://lucide.dev/) (иконки)
+
+## Возможности
+
+- Создание семейного древа
+- Добавление, редактирование и удаление родственников
+- Дерево связей с панорамированием, масштабированием и drag & drop для связей
+- Профиль человека с галереей фотографий
+- Загрузка фото с устройства или по URL
+- Поиск по родственникам
+- Темная тема
+- Страницы: дерево, профиль, настройки, статистика, важные даты, хронология
+- Адаптивная верстка для компьютера и телефона
+- Хранение данных локально в браузере
+
+## Установка и запуск
 
 ```bash
+# Перейдите в папку проекта
+cd familytree-web
+
+# Установите зависимости
+npm install
+
+# Запустите локальный сервер разработки
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте [http://localhost:3000](http://localhost:3000) в браузере.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Сборка для публикации
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+Статический сайт будет собран в папку `dist/`. Её можно загрузить на GitHub Pages, Netlify, Vercel или любой статический хостинг.
 
-To learn more about Next.js, take a look at the following resources:
+## Публикация на GitHub Pages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Создайте новый репозиторий на GitHub.
+2. Выполните команды в терминале:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cd familytree-web
+git init
+git add .
+git commit -m "Initial commit: Family Archive web app"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+git push -u origin main
+```
 
-## Deploy on Vercel
+3. В настройках репозитория (`Settings → Pages`) выберите ветку `main` и папку `dist/` (или соберите через GitHub Actions).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Структура проекта
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+familytree-web/
+  app/                 # Страницы Next.js
+  components/          # Компоненты интерфейса
+  lib/                 # Типы, хранилище и утилиты
+  components/ui/       # Компоненты shadcn/ui
+  dist/                # Сборка для публикации
+```
+
+## Лицензия
+
+MIT
