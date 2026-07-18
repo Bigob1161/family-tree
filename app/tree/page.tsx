@@ -12,12 +12,10 @@ import { CarpetBackground } from "@/components/carpet-background";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge } from "@/lib/utils";
 import { navigateTo, getPagePath } from "@/lib/navigate";
-import { useRouter } from "next/navigation";
 import { Search, Settings, UserPlus, TreePine } from "lucide-react";
 import Link from "next/link";
 
 export default function TreePage() {
-  const router = useRouter();
   const family = useFamilyStore((state) => state.family);
   const people = useFamilyStore((state) => state.family?.people || []);
   const searchQuery = useFamilyStore((state) => state.searchQuery);
@@ -57,7 +55,7 @@ export default function TreePage() {
             size="lg"
             onClick={() => {
               createFamily("Моя семья");
-              router.push(getPagePath("/tree"));
+              navigateTo("/tree");
             }}
             className="carpet-button mt-2 gap-2 px-6 text-primary-foreground"
           >
