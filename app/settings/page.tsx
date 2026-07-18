@@ -23,10 +23,31 @@ export default function SettingsPage() {
   const deletePerson = useFamilyStore((state) => state.deletePerson);
 
   if (!family) {
-    if (typeof window !== "undefined") {
-      navigateTo("/");
-    }
-    return null;
+    return (
+      <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
+        <CarpetBackground />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative z-10 flex flex-col items-center gap-4"
+        >
+          <Logo size={80} />
+          <h2 className="text-2xl font-bold text-foreground">Семейный архив</h2>
+          <OrnamentDivider className="w-40 text-accent" />
+          <p className="max-w-sm text-muted-foreground">
+            Создайте семью, чтобы открыть настройки.
+          </p>
+          <Button
+            size="lg"
+            onClick={() => navigateTo("/")}
+            className="carpet-button mt-2 gap-2 px-6 text-primary-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            На главную
+          </Button>
+        </motion.div>
+      </div>
+    );
   }
 
   const stats = {

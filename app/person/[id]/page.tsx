@@ -81,10 +81,30 @@ export default function PersonPage() {
   const [editForm, setEditForm] = useState<Partial<Person>>(() => person || {});
 
   if (!family || !person) {
-    if (typeof window !== "undefined") {
-      navigateTo("/");
-    }
-    return null;
+    return (
+      <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
+        <CarpetBackground />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative z-10 flex flex-col items-center gap-4"
+        >
+          <User className="h-20 w-20 text-accent" />
+          <h2 className="text-2xl font-bold text-foreground">Человек не найден</h2>
+          <p className="max-w-sm text-muted-foreground">
+            Вернитесь к семейному древу или создайте новую семью.
+          </p>
+          <Button
+            size="lg"
+            onClick={() => navigateTo("/tree")}
+            className="carpet-button mt-2 gap-2 px-6 text-primary-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            К древу
+          </Button>
+        </motion.div>
+      </div>
+    );
   }
 
   function handleSave() {

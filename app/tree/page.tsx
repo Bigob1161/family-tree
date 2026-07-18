@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FamilyTree } from "@/components/tree/family-tree";
 import { AddPersonDialog } from "@/components/add-person-dialog";
@@ -12,15 +12,23 @@ import { CarpetBackground } from "@/components/carpet-background";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge } from "@/lib/utils";
 import { navigateTo, getPagePath } from "@/lib/navigate";
+import { useRouter } from "next/navigation";
 import { Search, Settings, UserPlus, TreePine } from "lucide-react";
 import Link from "next/link";
 
 export default function TreePage() {
+  const router = useRouter();
   const family = useFamilyStore((state) => state.family);
   const people = useFamilyStore((state) => state.family?.people || []);
   const searchQuery = useFamilyStore((state) => state.searchQuery);
   const setSearchQuery = useFamilyStore((state) => state.setSearchQuery);
+  const createFamily = useFamilyStore((state) => state.createFamily);
   const [showSearch, setShowSearch] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const searchResults = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -31,11 +39,37 @@ export default function TreePage() {
   }, [searchQuery, people]);
 
   if (!family) {
-    if (typeof window !== "undefined") {
-      navigateTo("/");
-    }
-    return null;
+    return (
+      <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
+        <CarpetBackground />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative z-10 flex flex-col items-center gap-4"
+        >
+          <TreePine className="h-20 w-20 text-accent" />
+          <h2 className="text-2xl font-bold text-foreground">Семейный архив</h2>
+          <OrnamentDivider className="w-40 text-accent" />
+          <p className="max-w-sm text-muted-foreground">
+            Создайте семью, чтобы начать собирать историю вашего рода.
+          </p>
+          <Button
+            size="lg"
+            onClick={() => {
+              createFamily("Моя семья");
+              router.push(getPagePath("/tree"));
+            }}
+            className="carpet-button mt-2 gap-2 px-6 text-primary-foreground"
+          >
+            <UserPlus className="h-4 w-4" />
+            Создать семью
+          </Button>
+        </motion.div>
+      </div>
+    );
   }
+
+  if (!mounted) return null;
 
   return (
     <div className="relative flex h-screen flex-col overflow-hidden bg-background carpet-texture">

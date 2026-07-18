@@ -46,7 +46,24 @@ export default function DatesPage() {
     }[];
   }, [people]);
 
-  if (!family) return null;
+  if (!family) {
+    return (
+      <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
+        <CarpetBackground />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative z-10 flex flex-col items-center gap-4"
+        >
+          <Cake className="h-20 w-20 text-accent" />
+          <h2 className="text-2xl font-bold text-foreground">Важные даты</h2>
+          <p className="max-w-sm text-muted-foreground">
+            Создайте семью, чтобы увидеть дни рождения родственников.
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen carpet-texture">
