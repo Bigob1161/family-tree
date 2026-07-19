@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useEffect, useState } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +9,7 @@ import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge, parseDateParts } from "@/lib/utils";
-import { getPagePath } from "@/lib/navigate";
+import { navigateTo } from "@/lib/navigate";
 import { ArrowLeft, Users, User, Camera, Calendar } from "lucide-react";
 
 export default function StatisticsPage() {
@@ -99,11 +98,9 @@ export default function StatisticsPage() {
       <NeonBackground />
       <header className="neon-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <Link href={getPagePath("/tree")}>
-            <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)] drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+          <Button variant="ghost" size="icon" onClick={() => navigateTo("/tree")} className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)] drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
           <div className="flex items-center gap-3">
             <Logo size={36} />
             <h1 className="text-lg font-bold text-foreground">Статистика</h1>

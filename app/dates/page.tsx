@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useEffect, useState } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +10,7 @@ import { OrnamentDivider } from "@/components/ornament";
 import { PersonAvatar } from "@/components/person-avatar";
 import { useFamilyStore } from "@/lib/store";
 import { parseDateParts } from "@/lib/utils";
-import { getPagePath } from "@/lib/navigate";
+import { navigateTo } from "@/lib/navigate";
 import { ArrowLeft, Cake } from "lucide-react";
 
 function getDaysUntilBirthday(day: number, month: number): number {
@@ -78,11 +77,9 @@ export default function DatesPage() {
       <NeonBackground />
       <header className="neon-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <Link href={getPagePath("/tree")}>
-            <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+          <Button variant="ghost" size="icon" onClick={() => navigateTo("/tree")} className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]">
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
           <div className="flex items-center gap-3">
             <Logo size={36} />
             <h1 className="text-lg font-bold text-foreground">Важные даты</h1>
@@ -122,7 +119,11 @@ export default function DatesPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <Link href={getPagePath(`/person/${item.person.id}`)}>
+                  <button
+                    onClick={() => navigateTo(`/person/${item.person.id}`)}
+                    className="w-full text-left"
+                    type="button"
+                  >
                     <Card className="neon-card border-0 transition-colors hover:border-primary hover:bg-primary/5">
                       <CardContent className="flex items-center gap-4 p-4">
                         <PersonAvatar
@@ -153,7 +154,7 @@ export default function DatesPage() {
                         </span>
                       </CardContent>
                     </Card>
-                  </Link>
+                  </button>
                 </motion.div>
               ))}
             </div>

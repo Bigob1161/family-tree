@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +9,7 @@ import { OrnamentDivider } from "@/components/ornament";
 import { NeonBackground } from "@/components/neon-background";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge } from "@/lib/utils";
-import { navigateTo, getPagePath } from "@/lib/navigate";
+import { navigateTo } from "@/lib/navigate";
 import { ArrowLeft, Moon, Trash2, BarChart3, CalendarDays, History } from "lucide-react";
 import { toast } from "sonner";
 
@@ -72,11 +71,9 @@ export default function SettingsPage() {
     <div className="relative min-h-screen carpet-texture">
       <NeonBackground />
       <header className="neon-card sticky top-0 z-20 flex items-center gap-3 border-b border-border px-4 py-3 sm:px-6">
-        <Link href={getPagePath("/tree")}>
-          <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <Button variant="ghost" size="icon" onClick={() => navigateTo("/tree")} className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]">
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
         <h1 className="text-lg font-bold text-foreground">Настройки</h1>
       </header>
 
@@ -97,7 +94,7 @@ export default function SettingsPage() {
 
           <Card className="neon-card border-0 overflow-hidden">
             <CardContent className="divide-y divide-border/50 p-0">
-              <Link href={getPagePath("/statistics")}>
+              <button onClick={() => navigateTo("/statistics")} className="w-full text-left" type="button">
                 <div className="flex items-center justify-between p-4 transition-colors hover:bg-primary/5">
                   <div className="flex items-center gap-3">
                     <BarChart3 className="h-5 w-5 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
@@ -108,9 +105,9 @@ export default function SettingsPage() {
                     <p>{stats.generations} поколений</p>
                   </div>
                 </div>
-              </Link>
+              </button>
 
-              <Link href={getPagePath("/dates")}>
+              <button onClick={() => navigateTo("/dates")} className="w-full text-left" type="button">
                 <div className="flex items-center justify-between p-4 transition-colors hover:bg-primary/5">
                   <div className="flex items-center gap-3">
                     <CalendarDays className="h-5 w-5 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
@@ -120,9 +117,9 @@ export default function SettingsPage() {
                     {people.filter((p) => p.birthDate).length} дат
                   </span>
                 </div>
-              </Link>
+              </button>
 
-              <Link href={getPagePath("/timeline")}>
+              <button onClick={() => navigateTo("/timeline")} className="w-full text-left" type="button">
                 <div className="flex items-center justify-between p-4 transition-colors hover:bg-primary/5">
                   <div className="flex items-center gap-3">
                     <History className="h-5 w-5 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
@@ -132,7 +129,7 @@ export default function SettingsPage() {
                     {people.filter((p) => p.birthDate).length} событий
                   </span>
                 </div>
-              </Link>
+              </button>
 
               <div className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-3">

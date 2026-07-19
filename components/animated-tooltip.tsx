@@ -29,11 +29,11 @@ export function AnimatedTooltip({ children, content, className }: AnimatedToolti
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute bottom-full left-1/2 z-50 mb-2 w-max max-w-xs -translate-x-1/2 rounded-lg border border-accent/40 bg-card/95 px-3 py-2 text-sm text-card-foreground shadow-xl shadow-primary/10 backdrop-blur-sm"
+            className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-max max-w-xs -translate-x-1/2 rounded-lg border border-primary/40 bg-card/95 px-3 py-2 text-sm text-card-foreground shadow-xl shadow-primary/10 backdrop-blur-sm"
           >
             <div className="relative">
               {content}
-              <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 translate-y-1/2 rotate-45 border-b border-r border-accent/40 bg-card/95" />
+              <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 translate-y-1/2 rotate-45 border-b border-r border-primary/40 bg-card/95" />
             </div>
           </motion.div>
         )}

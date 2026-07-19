@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,7 +31,7 @@ import {
   RELATIONSHIP_LABELS,
 } from "@/lib/types";
 import { calculateAge, formatDateInput, isValidDate, cn } from "@/lib/utils";
-import { navigateTo, getPagePath } from "@/lib/navigate";
+import { navigateTo } from "@/lib/navigate";
 import {
   ArrowLeft,
   Calendar,
@@ -47,7 +46,6 @@ import {
 import { toast } from "sonner";
 
 export default function PersonPage() {
-  const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const family = useFamilyStore((state) => state.family);
   const people = useFamilyStore((state) => state.family?.people || []);
@@ -165,11 +163,13 @@ export default function PersonPage() {
       <NeonBackground />
       <header className="neon-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <Link href={getPagePath("/tree")}>
-            <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+          <button
+            onClick={() => navigateTo("/tree")}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]"
+            type="button"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
           <h1 className="text-lg font-bold text-foreground">Профиль</h1>
         </div>
         <div className="flex items-center gap-2">
@@ -361,7 +361,12 @@ export default function PersonPage() {
               ) : (
                 <div className="space-y-2">
                   {children.map((child) => (
-                    <Link key={child.id} href={getPagePath(`/person/${child.id}`)}>
+                    <button
+                      key={child.id}
+                      onClick={() => navigateTo(`/person/${child.id}`)}
+                      className="w-full text-left"
+                      type="button"
+                    >
                       <div className="neon-card flex items-center gap-3 border p-3 transition-colors hover:border-primary hover:bg-primary/5">
                         <PersonAvatar
                           src={child.photoUrl}
@@ -379,7 +384,7 @@ export default function PersonPage() {
                           </p>
                         </div>
                       </div>
-                    </Link>
+                    </button>
                   ))}
                 </div>
               )}

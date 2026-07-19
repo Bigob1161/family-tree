@@ -11,9 +11,8 @@ import { OrnamentDivider } from "@/components/ornament";
 import { NeonBackground } from "@/components/neon-background";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge } from "@/lib/utils";
-import { navigateTo, getPagePath } from "@/lib/navigate";
+import { navigateTo } from "@/lib/navigate";
 import { Search, Settings, UserPlus, TreePine } from "lucide-react";
-import Link from "next/link";
 
 export default function TreePage() {
   const family = useFamilyStore((state) => state.family);
@@ -74,15 +73,15 @@ export default function TreePage() {
       <NeonBackground />
       <header className="neon-card z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <Link href={getPagePath("/")} className="flex items-center gap-2">
+          <button onClick={() => navigateTo("/")} className="flex items-center gap-2">
             <Logo size={40} />
-            <div className="hidden sm:block">
+            <div className="hidden sm:block text-left">
               <h1 className="text-lg font-bold leading-tight text-foreground">
                 Family Archive
               </h1>
               <p className="text-xs text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]">{family.name}</p>
             </div>
-          </Link>
+          </button>
         </div>
 
         <div className="flex items-center gap-2">
@@ -140,29 +139,27 @@ export default function TreePage() {
             size="icon"
             onClick={() => setShowSearch(!showSearch)}
             className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.25)]"
+            type="button"
           >
             <Search className="h-5 w-5" />
           </Button>
 
           <AddPersonDialog>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.25)]"
+            <button
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.25)]"
+              type="button"
             >
               <UserPlus className="h-5 w-5" />
-            </Button>
+            </button>
           </AddPersonDialog>
 
-          <Link href={getPagePath("/settings")}>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.25)]"
-            >
-              <Settings className="h-5 w-5" />
-            </Button>
-          </Link>
+          <button
+            onClick={() => navigateTo("/settings")}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.25)]"
+            type="button"
+          >
+            <Settings className="h-5 w-5" />
+          </button>
         </div>
       </header>
 

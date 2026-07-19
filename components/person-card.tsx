@@ -64,7 +64,10 @@ export function PersonCard({
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        onClick={onClick}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick?.();
+        }}
         onMouseDown={(e) => e.preventDefault()}
         style={style}
         className={cn(

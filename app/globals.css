@@ -228,6 +228,7 @@
   mask-composite: exclude;
   opacity: 0.6;
   pointer-events: none;
+  z-index: -1;
 }
 
 .neon-card:hover {
@@ -249,6 +250,7 @@
     inset 0 0 10px color-mix(in srgb, var(--primary) 15%, transparent);
   transition: all 0.2s ease;
   overflow: hidden;
+  z-index: 1;
 }
 
 .neon-button::before {
@@ -260,6 +262,7 @@
   height: 100%;
   background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 35%, transparent), transparent);
   transition: left 0.4s ease;
+  z-index: -1;
 }
 
 .carpet-button:hover,
