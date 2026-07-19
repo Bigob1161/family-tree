@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
-import { CarpetBackground } from "@/components/carpet-background";
+import { NeonBackground } from "@/components/neon-background";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge } from "@/lib/utils";
 import { navigateTo, getPagePath } from "@/lib/navigate";
@@ -25,7 +25,7 @@ export default function SettingsPage() {
   if (!family) {
     return (
       <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
-        <CarpetBackground />
+        <NeonBackground />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -33,14 +33,14 @@ export default function SettingsPage() {
         >
           <Logo size={80} />
           <h2 className="text-2xl font-bold text-foreground">Семейный архив</h2>
-          <OrnamentDivider className="w-40 text-accent" />
+          <OrnamentDivider className="w-40 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
           <p className="max-w-sm text-muted-foreground">
             Создайте семью, чтобы открыть настройки.
           </p>
           <Button
             size="lg"
             onClick={() => navigateTo("/")}
-            className="carpet-button mt-2 gap-2 px-6 text-primary-foreground"
+            className="neon-button mt-2 gap-2 px-6"
           >
             <ArrowLeft className="h-4 w-4" />
             На главную
@@ -70,10 +70,10 @@ export default function SettingsPage() {
 
   return (
     <div className="relative min-h-screen carpet-texture">
-      <CarpetBackground />
-      <header className="carpet-card sticky top-0 z-20 flex items-center gap-3 border-b border-border px-4 py-3 sm:px-6">
+      <NeonBackground />
+      <header className="neon-card sticky top-0 z-20 flex items-center gap-3 border-b border-border px-4 py-3 sm:px-6">
         <Link href={getPagePath("/tree")}>
-          <Button variant="ghost" size="icon" className="text-foreground hover:bg-accent/10 hover:text-accent">
+          <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
@@ -86,21 +86,21 @@ export default function SettingsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-6"
         >
-          <Card className="carpet-card border-0">
+          <Card className="neon-card border-0">
             <CardContent className="flex flex-col items-center gap-3 p-8">
               <Logo size={80} />
-              <h2 className="text-2xl font-bold text-accent">Family Archive</h2>
+              <h2 className="text-2xl font-bold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Family Archive</h2>
               <OrnamentDivider className="w-32" />
               <p className="text-sm text-muted-foreground">Версия 1.0.0 · Цифровой архив рода</p>
             </CardContent>
           </Card>
 
-          <Card className="carpet-card border-0 overflow-hidden">
+          <Card className="neon-card border-0 overflow-hidden">
             <CardContent className="divide-y divide-border/50 p-0">
               <Link href={getPagePath("/statistics")}>
-                <div className="flex items-center justify-between p-4 transition-colors hover:bg-accent/5">
+                <div className="flex items-center justify-between p-4 transition-colors hover:bg-primary/5">
                   <div className="flex items-center gap-3">
-                    <BarChart3 className="h-5 w-5 text-accent" />
+                    <BarChart3 className="h-5 w-5 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
                     <span className="text-foreground">Статистика семьи</span>
                   </div>
                   <div className="text-right text-sm text-muted-foreground">
@@ -111,9 +111,9 @@ export default function SettingsPage() {
               </Link>
 
               <Link href={getPagePath("/dates")}>
-                <div className="flex items-center justify-between p-4 transition-colors hover:bg-accent/5">
+                <div className="flex items-center justify-between p-4 transition-colors hover:bg-primary/5">
                   <div className="flex items-center gap-3">
-                    <CalendarDays className="h-5 w-5 text-accent" />
+                    <CalendarDays className="h-5 w-5 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
                     <span className="text-foreground">Даты и дни рождения</span>
                   </div>
                   <span className="text-sm text-muted-foreground">
@@ -123,9 +123,9 @@ export default function SettingsPage() {
               </Link>
 
               <Link href={getPagePath("/timeline")}>
-                <div className="flex items-center justify-between p-4 transition-colors hover:bg-accent/5">
+                <div className="flex items-center justify-between p-4 transition-colors hover:bg-primary/5">
                   <div className="flex items-center gap-3">
-                    <History className="h-5 w-5 text-accent" />
+                    <History className="h-5 w-5 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
                     <span className="text-foreground">История семьи</span>
                   </div>
                   <span className="text-sm text-muted-foreground">
@@ -136,7 +136,7 @@ export default function SettingsPage() {
 
               <div className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-3">
-                  <Moon className="h-5 w-5 text-accent" />
+                  <Moon className="h-5 w-5 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
                   <span className="text-foreground">Темная тема</span>
                 </div>
                 <Switch checked={darkMode} onCheckedChange={toggleDarkMode} />
@@ -144,11 +144,11 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Card className="carpet-card border-2 border-destructive/30">
+          <Card className="neon-card border-2 border-destructive/30">
             <CardContent className="p-4">
               <Button
                 variant="destructive"
-                className="w-full gap-2"
+                className="w-full gap-2 bg-destructive/20 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:shadow-[0_0_24px_rgba(255,42,109,0.5)]"
                 onClick={handleClear}
               >
                 <Trash2 className="h-4 w-4" />

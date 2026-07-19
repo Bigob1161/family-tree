@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -19,7 +19,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { PersonAvatar } from "@/components/person-avatar";
 import { OrnamentDivider } from "@/components/ornament";
-import { CarpetBackground } from "@/components/carpet-background";
+import { NeonBackground } from "@/components/neon-background";
 import { AddPersonDialog } from "@/components/add-person-dialog";
 import { PhotoUpload } from "@/components/photo-upload";
 import { useFamilyStore } from "@/lib/store";
@@ -79,17 +79,26 @@ export default function PersonPage() {
   );
 
   const [editForm, setEditForm] = useState<Partial<Person>>(() => person || {});
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (person) setEditForm(person);
+  }, [person?.id]);
 
   if (!family || !person) {
     return (
       <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
-        <CarpetBackground />
+        <NeonBackground />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="relative z-10 flex flex-col items-center gap-4"
         >
-          <User className="h-20 w-20 text-accent" />
+          <User className="h-20 w-20 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
           <h2 className="text-2xl font-bold text-foreground">Человек не найден</h2>
           <p className="max-w-sm text-muted-foreground">
             Вернитесь к семейному древу или создайте новую семью.
@@ -97,7 +106,7 @@ export default function PersonPage() {
           <Button
             size="lg"
             onClick={() => navigateTo("/tree")}
-            className="carpet-button mt-2 gap-2 px-6 text-primary-foreground"
+            className="neon-button mt-2 gap-2 px-6"
           >
             <ArrowLeft className="h-4 w-4" />
             К древу
@@ -149,13 +158,15 @@ export default function PersonPage() {
 
   const age = calculateAge(person.birthDate);
 
+  if (!mounted) return null;
+
   return (
     <div className="relative min-h-screen carpet-texture">
-      <CarpetBackground />
-      <header className="carpet-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+      <NeonBackground />
+      <header className="neon-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
           <Link href={getPagePath("/tree")}>
-            <Button variant="ghost" size="icon" className="text-foreground hover:bg-accent/10 hover:text-accent">
+            <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
@@ -166,7 +177,7 @@ export default function PersonPage() {
             variant="ghost"
             size="icon"
             onClick={() => setIsEditing(!isEditing)}
-            className="text-foreground hover:bg-accent/10 hover:text-accent"
+            className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]"
           >
             <Edit2 className="h-5 w-5" />
           </Button>
@@ -182,7 +193,7 @@ export default function PersonPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-6"
         >
-          <Card className="carpet-card overflow-hidden border-0">
+          <Card className="neon-card overflow-hidden border-0">
             <CardContent className="flex flex-col items-center gap-4 p-8">
               <PersonAvatar
                 src={person.photoUrl}
@@ -213,7 +224,7 @@ export default function PersonPage() {
                   </div>
                 ) : (
                   <>
-                    <h2 className="text-2xl font-bold text-accent">
+                    <h2 className="text-2xl font-bold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">
                       {person.firstName} {person.lastName}
                     </h2>
                     <p className="text-muted-foreground">
@@ -226,10 +237,10 @@ export default function PersonPage() {
             </CardContent>
           </Card>
 
-          <Card className="carpet-card border-0">
+          <Card className="neon-card border-0">
             <CardContent className="space-y-4 p-6">
               <DetailRow
-                icon={<Calendar className="h-4 w-4 text-accent" />}
+                icon={<Calendar className="h-4 w-4 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />}
                 label="Дата рождения"
                 value={person.birthDate || "—"}
                 editing={isEditing}
@@ -240,12 +251,12 @@ export default function PersonPage() {
                 inputMode="date"
               />
               <DetailRow
-                icon={<User className="h-4 w-4 text-accent" />}
+                icon={<User className="h-4 w-4 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />}
                 label="Возраст"
                 value={age !== null ? `${age} лет` : "—"}
               />
               <DetailRow
-                icon={<User className="h-4 w-4 text-accent" />}
+                icon={<User className="h-4 w-4 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />}
                 label="Пол"
                 value={GENDER_LABELS[person.gender]}
                 editing={isEditing}
@@ -256,7 +267,7 @@ export default function PersonPage() {
                 }
               />
               <DetailRow
-                icon={<Users className="h-4 w-4 text-accent" />}
+                icon={<Users className="h-4 w-4 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />}
                 label="Родитель/супруг"
                 value={parent ? `${parent.firstName} ${parent.lastName}` : "—"}
               />
@@ -264,9 +275,9 @@ export default function PersonPage() {
           </Card>
 
           {(person.notes || isEditing) && (
-            <Card className="carpet-card border-0">
+            <Card className="neon-card border-0">
               <CardContent className="p-6">
-                <h3 className="mb-2 text-sm font-medium text-accent">
+                <h3 className="mb-2 text-sm font-medium text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">
                   Заметки
                 </h3>
                 {isEditing ? (
@@ -276,7 +287,7 @@ export default function PersonPage() {
                       setEditForm({ ...editForm, notes: e.target.value })
                     }
                     rows={4}
-                    className="border-border bg-background"
+                    className="border-primary/30 bg-background/80 focus:border-primary focus:ring-primary/30"
                   />
                 ) : (
                   <p className="whitespace-pre-wrap text-foreground">
@@ -290,24 +301,24 @@ export default function PersonPage() {
           {isEditing && (
             <Button
               onClick={handleSave}
-              className="carpet-button w-full"
+              className="neon-button w-full"
             >
               <Save className="mr-2 h-4 w-4" />
               Сохранить изменения
             </Button>
           )}
 
-          <Card className="carpet-card border-0">
+          <Card className="neon-card border-0">
             <CardContent className="p-6">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-accent">Галерея</h3>
+                <h3 className="text-lg font-semibold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Галерея</h3>
                 <div className="flex items-center gap-2">
                   <PhotoUpload onUpload={handleAddUploadedPhoto} />
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={handleAddPhotoUrl}
-                    className="gap-1 border-border bg-background hover:border-accent hover:text-accent"
+                    className="gap-1 neon-button bg-background/60 hover:text-background"
                   >
                     <LinkIcon className="h-4 w-4" />
                     URL
@@ -315,7 +326,7 @@ export default function PersonPage() {
                 </div>
               </div>
               {personPhotos.length === 0 ? (
-                <div className="rounded-lg border border-dashed border-border bg-background/50 p-8 text-center text-muted-foreground">
+                <div className="rounded-lg border border-dashed border-primary/30 bg-background/80 focus:border-primary focus:ring-primary/30/50 p-8 text-center text-muted-foreground">
                   В личной галерее пока нет фотографий
                 </div>
               ) : (
@@ -332,12 +343,12 @@ export default function PersonPage() {
             </CardContent>
           </Card>
 
-          <Card className="carpet-card border-0">
+          <Card className="neon-card border-0">
             <CardContent className="p-6">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-accent">Дети и родственники</h3>
+                <h3 className="text-lg font-semibold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Дети и родственники</h3>
                 <AddPersonDialog defaultParentId={person.id}>
-                  <Button variant="outline" size="sm" className="gap-1 border-border bg-background hover:border-accent hover:text-accent">
+                  <Button variant="outline" size="sm" className="gap-1 neon-button bg-background/60 hover:text-background">
                     <User className="h-4 w-4" />
                     Добавить
                   </Button>
@@ -351,7 +362,7 @@ export default function PersonPage() {
                 <div className="space-y-2">
                   {children.map((child) => (
                     <Link key={child.id} href={getPagePath(`/person/${child.id}`)}>
-                      <div className="carpet-card flex items-center gap-3 border p-3 transition-colors hover:border-accent hover:bg-accent/5">
+                      <div className="neon-card flex items-center gap-3 border p-3 transition-colors hover:border-primary hover:bg-primary/5">
                         <PersonAvatar
                           src={child.photoUrl}
                           name={`${child.firstName} ${child.lastName}`}
@@ -408,7 +419,7 @@ function DetailRow({
       {editing ? (
         editType === "gender" ? (
           <Select value={editValue} onValueChange={(v) => onEditChange?.(v ?? "")}>
-            <SelectTrigger className="w-40 border-border bg-background">
+            <SelectTrigger className="w-40 border-primary/30 bg-background/80 focus:border-primary focus:ring-primary/30">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -423,7 +434,7 @@ function DetailRow({
           <Input
             value={editValue}
             onChange={(e) => onEditChange?.(e.target.value)}
-            className="w-40 border-border bg-background"
+            className="w-40 border-primary/30 bg-background/80 focus:border-primary focus:ring-primary/30"
             inputMode={inputMode === "date" ? "numeric" : "text"}
           />
         )
@@ -436,7 +447,7 @@ function DetailRow({
 
 function PhotoCard({ photo, onDelete }: { photo: Photo; onDelete: () => void }) {
   return (
-    <div className="carpet-card group relative aspect-square overflow-hidden rounded-xl border">
+    <div className="neon-card group relative aspect-square overflow-hidden rounded-xl border">
       <img
         src={photo.url}
         alt={photo.caption || "Фото"}
@@ -444,7 +455,7 @@ function PhotoCard({ photo, onDelete }: { photo: Photo; onDelete: () => void }) 
       />
       <button
         onClick={onDelete}
-        className="absolute right-2 top-2 rounded-full bg-destructive p-1 text-destructive-foreground opacity-0 transition-opacity group-hover:opacity-100"
+        className="absolute right-2 top-2 rounded-full bg-destructive p-1 text-destructive-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:shadow-[0_0_12px_rgba(255,42,109,0.6)]"
       >
         <X className="h-3 w-3" />
       </button>

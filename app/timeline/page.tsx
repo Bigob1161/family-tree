@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CarpetBackground } from "@/components/carpet-background";
+import { NeonBackground } from "@/components/neon-background";
 import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
 import { PersonAvatar } from "@/components/person-avatar";
@@ -17,6 +17,12 @@ import { ArrowLeft, Calendar } from "lucide-react";
 export default function TimelinePage() {
   const family = useFamilyStore((state) => state.family);
   const people = useFamilyStore((state) => state.family?.people || []);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const events = useMemo(() => {
     const list = people
@@ -40,13 +46,13 @@ export default function TimelinePage() {
   if (!family) {
     return (
       <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
-        <CarpetBackground />
+        <NeonBackground />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="relative z-10 flex flex-col items-center gap-4"
         >
-          <Calendar className="h-20 w-20 text-accent" />
+          <Calendar className="h-20 w-20 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
           <h2 className="text-2xl font-bold text-foreground">История семьи</h2>
           <p className="max-w-sm text-muted-foreground">
             Создайте семью, чтобы увидеть хронологию рода.
@@ -56,13 +62,15 @@ export default function TimelinePage() {
     );
   }
 
+  if (!mounted) return null;
+
   return (
     <div className="relative min-h-screen carpet-texture">
-      <CarpetBackground />
-      <header className="carpet-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+      <NeonBackground />
+      <header className="neon-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
           <Link href={getPagePath("/tree")}>
-            <Button variant="ghost" size="icon" className="text-foreground hover:bg-accent/10 hover:text-accent">
+            <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)] drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
@@ -79,9 +87,9 @@ export default function TimelinePage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-6"
         >
-          <Card className="carpet-card border-0">
+          <Card className="neon-card border-0">
             <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-bold text-accent">Хронология рода</h2>
+              <h2 className="text-2xl font-bold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Хронология рода</h2>
               <OrnamentDivider className="mx-auto mt-3 w-32" />
               <p className="mt-4 text-muted-foreground">
                 Важные события и поколения вашей семьи в порядке времени.
@@ -90,9 +98,9 @@ export default function TimelinePage() {
           </Card>
 
           {events.length === 0 ? (
-            <Card className="carpet-card border-0">
+            <Card className="neon-card border-0">
               <CardContent className="p-8 text-center text-muted-foreground">
-                <Calendar className="mx-auto mb-3 h-10 w-10 text-accent" />
+                <Calendar className="mx-auto mb-3 h-10 w-10 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
                 Пока нет событий. Добавьте даты рождения родственникам, чтобы увидеть историю семьи.
               </CardContent>
             </Card>
@@ -107,9 +115,9 @@ export default function TimelinePage() {
                   transition={{ delay: index * 0.05 }}
                   className="relative"
                 >
-                  <div className="absolute -left-3 top-4 h-3 w-3 -translate-x-1/2 rounded-full bg-accent ring-2 ring-background" />
+                  <div className="absolute -left-3 top-4 h-3 w-3 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_10px_rgba(0,243,255,0.5)] ring-2 ring-background" />
                   <Link href={getPagePath(`/person/${event.person.id}`)}>
-                    <Card className="carpet-card border-0 transition-colors hover:border-accent hover:bg-accent/5">
+                    <Card className="neon-card border-0 transition-colors hover:border-accent hover:bg-primary/5 hover:border-primary">
                       <CardContent className="flex items-center gap-4 p-4">
                         <PersonAvatar
                           src={event.person.photoUrl}

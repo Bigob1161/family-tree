@@ -29,12 +29,12 @@ export function PersonAvatar({ src, name, size = "md", className }: PersonAvatar
     <Avatar
       className={cn(
         sizeClasses[size],
-        "border-2 border-accent bg-secondary ring-2 ring-background",
+        "border-2 border-primary bg-secondary shadow-[0_0_12px_rgba(0,243,255,0.35)] ring-2 ring-background",
         className
       )}
     >
       <AvatarImage src={src} alt={name} className="object-cover" />
-      <AvatarFallback className="bg-secondary text-secondary-foreground font-medium">
+      <AvatarFallback className="bg-secondary text-primary font-bold">
         {initials || "?"}
       </AvatarFallback>
     </Avatar>

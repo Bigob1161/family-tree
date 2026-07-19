@@ -65,7 +65,7 @@ export function PhotoUpload({ onUpload, className }: PhotoUploadProps) {
         type="button"
         variant="outline"
         size="sm"
-        className={cn("gap-1 border-border bg-background hover:border-accent hover:text-accent", className)}
+        className={cn("neon-button gap-1 bg-background/60 hover:text-background", className)}
         onClick={() => inputRef.current?.click()}
         disabled={loading}
       >

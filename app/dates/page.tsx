@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CarpetBackground } from "@/components/carpet-background";
+import { NeonBackground } from "@/components/neon-background";
 import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
 import { PersonAvatar } from "@/components/person-avatar";
@@ -46,16 +46,22 @@ export default function DatesPage() {
     }[];
   }, [people]);
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   if (!family) {
     return (
       <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
-        <CarpetBackground />
+        <NeonBackground />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="relative z-10 flex flex-col items-center gap-4"
         >
-          <Cake className="h-20 w-20 text-accent" />
+          <Cake className="h-20 w-20 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
           <h2 className="text-2xl font-bold text-foreground">Важные даты</h2>
           <p className="max-w-sm text-muted-foreground">
             Создайте семью, чтобы увидеть дни рождения родственников.
@@ -65,13 +71,15 @@ export default function DatesPage() {
     );
   }
 
+  if (!mounted) return null;
+
   return (
     <div className="relative min-h-screen carpet-texture">
-      <CarpetBackground />
-      <header className="carpet-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+      <NeonBackground />
+      <header className="neon-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
           <Link href={getPagePath("/tree")}>
-            <Button variant="ghost" size="icon" className="text-foreground hover:bg-accent/10 hover:text-accent">
+            <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
@@ -88,9 +96,9 @@ export default function DatesPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-6"
         >
-          <Card className="carpet-card border-0">
+          <Card className="neon-card border-0">
             <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-bold text-accent">Дни рождения</h2>
+              <h2 className="text-2xl font-bold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Дни рождения</h2>
               <OrnamentDivider className="mx-auto mt-3 w-32" />
               <p className="mt-4 text-muted-foreground">
                 Список дней рождения родственников, отсортированный по близости даты.
@@ -99,9 +107,9 @@ export default function DatesPage() {
           </Card>
 
           {upcoming.length === 0 ? (
-            <Card className="carpet-card border-0">
+            <Card className="neon-card border-0">
               <CardContent className="p-8 text-center text-muted-foreground">
-                <Cake className="mx-auto mb-3 h-10 w-10 text-accent" />
+                <Cake className="mx-auto mb-3 h-10 w-10 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
                 Пока нет дат рождения. Добавьте их в профилях родственников.
               </CardContent>
             </Card>
@@ -115,7 +123,7 @@ export default function DatesPage() {
                   transition={{ delay: index * 0.05 }}
                 >
                   <Link href={getPagePath(`/person/${item.person.id}`)}>
-                    <Card className="carpet-card border-0 transition-colors hover:border-accent hover:bg-accent/5">
+                    <Card className="neon-card border-0 transition-colors hover:border-primary hover:bg-primary/5">
                       <CardContent className="flex items-center gap-4 p-4">
                         <PersonAvatar
                           src={item.person.photoUrl}
@@ -133,7 +141,7 @@ export default function DatesPage() {
                             item.days === 0
                               ? "bg-primary text-primary-foreground"
                               : item.days <= 7
-                                ? "bg-accent text-accent-foreground"
+                                ? "bg-accent text-accent-foreground shadow-[0_0_12px_rgba(176,38,255,0.4)]"
                                 : "bg-secondary text-secondary-foreground"
                           }`}
                         >

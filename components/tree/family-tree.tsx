@@ -199,13 +199,13 @@ export function FamilyTree({ className }: { className?: string }) {
       onMouseLeave={handleMouseUp}
     >
       <div className="absolute right-4 bottom-4 z-10 flex flex-col gap-2">
-        <Button variant="secondary" size="icon" className="carpet-card border-0" onClick={() => setScale((s) => Math.min(s * 1.2, 2.5))}>
+        <Button variant="secondary" size="icon" className="neon-card border-0 text-primary hover:bg-primary/20" onClick={() => setScale((s) => Math.min(s * 1.2, 2.5))}>
           <ZoomIn className="h-4 w-4" />
         </Button>
-        <Button variant="secondary" size="icon" className="carpet-card border-0" onClick={() => setScale((s) => Math.max(s / 1.2, 0.3))}>
+        <Button variant="secondary" size="icon" className="neon-card border-0 text-primary hover:bg-primary/20" onClick={() => setScale((s) => Math.max(s / 1.2, 0.3))}>
           <ZoomOut className="h-4 w-4" />
         </Button>
-        <Button variant="secondary" size="icon" className="carpet-card border-0" onClick={centerTree}>
+        <Button variant="secondary" size="icon" className="neon-card border-0 text-primary hover:bg-primary/20" onClick={centerTree}>
           <Maximize className="h-4 w-4" />
         </Button>
       </div>

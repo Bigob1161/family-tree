@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
-import { CarpetBackground } from "@/components/carpet-background";
+import { NeonBackground } from "@/components/neon-background";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge } from "@/lib/utils";
 import { navigateTo, getPagePath } from "@/lib/navigate";
@@ -39,15 +39,15 @@ export default function TreePage() {
   if (!family) {
     return (
       <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
-        <CarpetBackground />
+        <NeonBackground />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="relative z-10 flex flex-col items-center gap-4"
         >
-          <TreePine className="h-20 w-20 text-accent" />
+          <TreePine className="h-20 w-20 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]" />
           <h2 className="text-2xl font-bold text-foreground">Семейный архив</h2>
-          <OrnamentDivider className="w-40 text-accent" />
+          <OrnamentDivider className="w-40 text-primary drop-shadow-[0_0_10px_rgba(0,243,255,0.6)]" />
           <p className="max-w-sm text-muted-foreground">
             Создайте семью, чтобы начать собирать историю вашего рода.
           </p>
@@ -57,7 +57,7 @@ export default function TreePage() {
               createFamily("Моя семья");
               navigateTo("/tree");
             }}
-            className="carpet-button mt-2 gap-2 px-6 text-primary-foreground"
+            className="neon-button mt-2 gap-2 px-6"
           >
             <UserPlus className="h-4 w-4" />
             Создать семью
@@ -71,8 +71,8 @@ export default function TreePage() {
 
   return (
     <div className="relative flex h-screen flex-col overflow-hidden bg-background carpet-texture">
-      <CarpetBackground />
-      <header className="carpet-card z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+      <NeonBackground />
+      <header className="neon-card z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
           <Link href={getPagePath("/")} className="flex items-center gap-2">
             <Logo size={40} />
@@ -80,7 +80,7 @@ export default function TreePage() {
               <h1 className="text-lg font-bold leading-tight text-foreground">
                 Family Archive
               </h1>
-              <p className="text-xs text-accent">{family.name}</p>
+              <p className="text-xs text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]">{family.name}</p>
             </div>
           </Link>
         </div>
@@ -98,11 +98,11 @@ export default function TreePage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Поиск родственника..."
-                  className="h-9 w-full border-accent/30 bg-card/80 pr-8 text-foreground placeholder:text-muted-foreground"
+                  className="h-9 w-full border-primary/30 bg-card/80 pr-8 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/30"
                   autoFocus
                 />
                 {searchQuery && (
-                  <div className="absolute right-0 top-10 z-30 w-60 rounded-xl border border-accent/30 bg-card/95 p-2 shadow-xl backdrop-blur-sm">
+                  <div className="absolute right-0 top-10 z-30 w-60 rounded-xl border border-primary/30 bg-card/95 p-2 shadow-xl shadow-primary/20 backdrop-blur-sm">
                     {searchResults.length === 0 ? (
                       <p className="px-2 py-1 text-sm text-muted-foreground">
                         Ничего не найдено
@@ -116,7 +116,7 @@ export default function TreePage() {
                             setSearchQuery("");
                             setShowSearch(false);
                           }}
-                          className="w-full rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent/10"
+                          className="w-full rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-primary/10 hover:text-primary"
                         >
                           <span className="font-medium text-foreground">
                             {p.firstName} {p.lastName}
@@ -139,7 +139,7 @@ export default function TreePage() {
             variant="ghost"
             size="icon"
             onClick={() => setShowSearch(!showSearch)}
-            className="text-foreground hover:bg-accent/10 hover:text-accent"
+            className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.25)]"
           >
             <Search className="h-5 w-5" />
           </Button>
@@ -148,7 +148,7 @@ export default function TreePage() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-foreground hover:bg-accent/10 hover:text-accent"
+              className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.25)]"
             >
               <UserPlus className="h-5 w-5" />
             </Button>
@@ -158,7 +158,7 @@ export default function TreePage() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-foreground hover:bg-accent/10 hover:text-accent"
+              className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.25)]"
             >
               <Settings className="h-5 w-5" />
             </Button>
@@ -175,16 +175,16 @@ export default function TreePage() {
               transition={{ duration: 0.5 }}
               className="relative z-10 flex flex-col items-center gap-4"
             >
-              <TreePine className="h-20 w-20 text-accent" />
+              <TreePine className="h-20 w-20 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]" />
               <h2 className="text-2xl font-bold text-foreground">
                 Ваше семейное древо еще не посажено
               </h2>
-              <OrnamentDivider className="w-40 text-accent" />
+              <OrnamentDivider className="w-40 text-primary drop-shadow-[0_0_10px_rgba(0,243,255,0.6)]" />
               <p className="max-w-sm text-muted-foreground">
                 Добавьте первого родственника, чтобы начать собирать историю вашей семьи.
               </p>
               <AddPersonDialog>
-                <Button className="carpet-button mt-2 gap-2 px-6 text-primary-foreground">
+                <Button className="neon-button mt-2 gap-2 px-6 text-primary">
                   <UserPlus className="h-4 w-4" />
                   Посадить первое семейное древо
                 </Button>

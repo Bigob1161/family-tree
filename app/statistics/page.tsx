@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CarpetBackground } from "@/components/carpet-background";
+import { NeonBackground } from "@/components/neon-background";
 import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
 import { useFamilyStore } from "@/lib/store";
@@ -17,6 +17,12 @@ export default function StatisticsPage() {
   const family = useFamilyStore((state) => state.family);
   const people = useFamilyStore((state) => state.family?.people || []);
   const photos = useFamilyStore((state) => state.family?.photos || []);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const stats = useMemo(() => {
     const total = people.length;
@@ -70,13 +76,13 @@ export default function StatisticsPage() {
   if (!family) {
     return (
       <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
-        <CarpetBackground />
+        <NeonBackground />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="relative z-10 flex flex-col items-center gap-4"
         >
-          <Users className="h-20 w-20 text-accent" />
+          <Users className="h-20 w-20 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
           <h2 className="text-2xl font-bold text-foreground">Статистика семьи</h2>
           <p className="max-w-sm text-muted-foreground">
             Создайте семью, чтобы увидеть статистику рода.
@@ -86,13 +92,15 @@ export default function StatisticsPage() {
     );
   }
 
+  if (!mounted) return null;
+
   return (
     <div className="relative min-h-screen carpet-texture">
-      <CarpetBackground />
-      <header className="carpet-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+      <NeonBackground />
+      <header className="neon-card sticky top-0 z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
           <Link href={getPagePath("/tree")}>
-            <Button variant="ghost" size="icon" className="text-foreground hover:bg-accent/10 hover:text-accent">
+            <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)] drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
@@ -109,9 +117,9 @@ export default function StatisticsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-6"
         >
-          <Card className="carpet-card border-0">
+          <Card className="neon-card border-0">
             <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-bold text-accent">Статистика семьи</h2>
+              <h2 className="text-2xl font-bold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Статистика семьи</h2>
               <OrnamentDivider className="mx-auto mt-3 w-32" />
               <p className="mt-4 text-muted-foreground">
                 Цифры, поколения и интересные факты о вашем роде.
@@ -127,10 +135,10 @@ export default function StatisticsPage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <Card className="carpet-card border-0">
+            <Card className="neon-card border-0">
               <CardContent className="space-y-3 p-5">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Calendar className="h-4 w-4 text-accent" />
+                  <Calendar className="h-4 w-4 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
                   <span className="text-sm">Возраст</span>
                 </div>
                 <div className="space-y-1 text-sm">
@@ -147,10 +155,10 @@ export default function StatisticsPage() {
               </CardContent>
             </Card>
 
-            <Card className="carpet-card border-0">
+            <Card className="neon-card border-0">
               <CardContent className="space-y-3 p-5">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Users className="h-4 w-4 text-accent" />
+                  <Users className="h-4 w-4 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
                   <span className="text-sm">Поколения</span>
                 </div>
                 <div className="space-y-1 text-sm">
@@ -166,9 +174,9 @@ export default function StatisticsPage() {
           </div>
 
           {Object.keys(stats.decades).length > 0 && (
-            <Card className="carpet-card border-0">
+            <Card className="neon-card border-0">
               <CardContent className="p-5">
-                <h3 className="mb-4 text-sm font-medium text-accent">Десятилетия рождений</h3>
+                <h3 className="mb-4 text-sm font-medium text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Десятилетия рождений</h3>
                 <div className="space-y-3">
                   {Object.entries(stats.decades)
                     .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
@@ -183,7 +191,7 @@ export default function StatisticsPage() {
                               initial={{ width: 0 }}
                               animate={{ width: `${pct}%` }}
                               transition={{ duration: 0.8 }}
-                              className="h-3 rounded-full bg-primary"
+                              className="h-3 rounded-full bg-primary shadow-[0_0_10px_rgba(0,243,255,0.5)]"
                             />
                           </div>
                           <span className="w-8 text-right text-sm font-medium text-foreground">{count}</span>
@@ -202,9 +210,9 @@ export default function StatisticsPage() {
 
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
   return (
-    <Card className="carpet-card border-0">
+    <Card className="neon-card border-0">
       <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
-        <div className="text-accent">{icon}</div>
+        <div className="text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">{icon}</div>
         <span className="text-2xl font-bold text-foreground">{value}</span>
         <span className="text-xs text-muted-foreground">{label}</span>
       </CardContent>

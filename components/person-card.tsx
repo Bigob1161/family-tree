@@ -47,7 +47,7 @@ export function PersonCard({
 
   const tooltipContent = (
     <div className="text-center">
-      <p className="font-semibold text-accent">{person.firstName} {person.lastName}</p>
+      <p className="font-semibold text-primary drop-shadow-[0_0_6px_rgba(0,243,255,0.5)]">{person.firstName} {person.lastName}</p>
       <p className="text-xs text-muted-foreground">
         {age !== null ? `${age} лет` : RELATIONSHIP_LABELS[person.relationshipType]}
       </p>
@@ -74,8 +74,8 @@ export function PersonCard({
       >
         <Card
           className={cn(
-            "carpet-card flex w-36 flex-col items-center gap-2 bg-card/95 p-3 backdrop-blur-sm transition-all",
-            isSelected && "ring-2 ring-accent shadow-xl shadow-accent/20"
+            "neon-card flex w-36 flex-col items-center gap-2 bg-card/95 p-3 backdrop-blur-sm transition-all",
+            isSelected && "border-primary shadow-[0_0_20px_rgba(0,243,255,0.35)]"
           )}
         >
           <PersonAvatar src={person.photoUrl} name={`${person.firstName} ${person.lastName}`} size="md" />
@@ -84,7 +84,7 @@ export function PersonCard({
               {person.firstName}
             </p>
             <p className="truncate text-xs text-muted-foreground">{person.lastName}</p>
-            <p className="mt-1 text-xs font-medium text-accent">
+            <p className="mt-1 text-xs font-medium text-primary drop-shadow-[0_0_6px_rgba(0,243,255,0.4)]">
               {age !== null ? `${age} лет` : RELATIONSHIP_LABELS[person.relationshipType]}
             </p>
           </div>
