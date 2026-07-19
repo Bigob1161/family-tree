@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { PersonCard } from "@/components/person-card";
 import { useFamilyStore } from "@/lib/store";
 import { Person } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { navigateTo } from "@/lib/navigate";
+import { navigateToPerson } from "@/lib/navigate";
 import { ConnectDialog } from "@/components/tree/connect-dialog";
 import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, Maximize } from "lucide-react";
+import { ZoomIn, ZoomOut, Maximize, Sparkles, Search } from "lucide-react";
+import { toast } from "sonner";
 
 const CARD_WIDTH = 144;
 const CARD_HEIGHT = 160;
@@ -41,18 +42,6 @@ function buildTreeLayout(people: Person[]): TreeNode[] {
   const nodes: TreeNode[] = [];
   const visited = new Set<string>();
 
-  function depth(person: Person): number {
-    let d = 0;
-    let current: Person | undefined = person;
-    const seen = new Set<string>();
-    while (current?.parentId && byId.has(current.parentId) && !seen.has(current.id)) {
-      seen.add(current.id);
-      d++;
-      current = byId.get(current.parentId);
-    }
-    return d;
-  }
-
   function layoutSubtree(root: Person, startX: number, level: number): number {
     if (visited.has(root.id)) return startX;
     visited.add(root.id);
@@ -83,7 +72,6 @@ function buildTreeLayout(people: Person[]): TreeNode[] {
     cursorX = layoutSubtree(root, cursorX, 0);
   }
 
-  // place orphaned cyclic nodes safely
   for (const person of people) {
     if (!visited.has(person.id)) {
       nodes.push({ person, x: cursorX, y: 0, depth: 0 });
@@ -114,6 +102,11 @@ export function FamilyTree({ className }: { className?: string }) {
     sourceId: string;
     targetId: string;
   } | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const nodes = useMemo(() => buildTreeLayout(people), [people]);
 
@@ -157,6 +150,11 @@ export function FamilyTree({ className }: { className?: string }) {
     setConnectDialog({ sourceId, targetId });
   }
 
+  function highlightPath(id: string) {
+    setSelectedId(id);
+    toast("Выбран: " + people.find((p) => p.id === id)?.firstName);
+  }
+
   const lines = useMemo(() => {
     const byId = new Map(nodes.map((n) => [n.person.id, n]));
     const result: {
@@ -185,11 +183,13 @@ export function FamilyTree({ className }: { className?: string }) {
     return result;
   }, [nodes, selectedId]);
 
+  if (!mounted) return null;
+
   return (
     <div
       ref={containerRef}
       className={cn(
-        "relative h-full w-full cursor-grab overflow-hidden bg-background carpet-texture active:cursor-grabbing",
+        "relative h-full w-full cursor-grab overflow-hidden bg-background active:cursor-grabbing",
         className
       )}
       onWheel={handleWheel}
@@ -235,8 +235,8 @@ export function FamilyTree({ className }: { className?: string }) {
               person={node.person}
               isSelected={selectedId === node.person.id}
               onClick={() => {
-                setSelectedId(node.person.id);
-                navigateTo(`/person/${node.person.id}`);
+                highlightPath(node.person.id);
+                navigateToPerson(node.person.id);
               }}
               onDragStart={() => setSelectedId(node.person.id)}
               onDrop={() => {
@@ -248,17 +248,20 @@ export function FamilyTree({ className }: { className?: string }) {
         ))}
       </motion.div>
 
-      {connectDialog && (
-        <ConnectDialog
-          sourceId={connectDialog.sourceId}
-          targetId={connectDialog.targetId}
-          onClose={() => setConnectDialog(null)}
-          onConnect={(relationship) => {
-            connectPeople(connectDialog.sourceId, connectDialog.targetId, relationship);
-            setConnectDialog(null);
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {connectDialog && (
+          <ConnectDialog
+            sourceId={connectDialog.sourceId}
+            targetId={connectDialog.targetId}
+            onClose={() => setConnectDialog(null)}
+            onConnect={(relationship) => {
+              connectPeople(connectDialog.sourceId, connectDialog.targetId, relationship);
+              setConnectDialog(null);
+              toast.success("Связь добавлена");
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

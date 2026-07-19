@@ -11,8 +11,8 @@ import { OrnamentDivider } from "@/components/ornament";
 import { NeonBackground } from "@/components/neon-background";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge } from "@/lib/utils";
-import { navigateTo } from "@/lib/navigate";
-import { Search, Settings, UserPlus, TreePine } from "lucide-react";
+import { navigateTo, navigateToPerson } from "@/lib/navigate";
+import { Search, Settings, UserPlus, TreePine, Sparkles } from "lucide-react";
 
 export default function TreePage() {
   const family = useFamilyStore((state) => state.family);
@@ -34,6 +34,15 @@ export default function TreePage() {
       `${p.firstName} ${p.lastName}`.toLowerCase().includes(q)
     );
   }, [searchQuery, people]);
+
+  if (!mounted) {
+    return (
+      <div className="relative flex h-screen items-center justify-center bg-background">
+        <NeonBackground />
+        <Sparkles className="h-10 w-10 animate-pulse text-primary" />
+      </div>
+    );
+  }
 
   if (!family) {
     return (
@@ -66,14 +75,12 @@ export default function TreePage() {
     );
   }
 
-  if (!mounted) return null;
-
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden bg-background carpet-texture">
+    <div className="relative flex h-screen flex-col overflow-hidden bg-background">
       <NeonBackground />
       <header className="neon-card z-20 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigateTo("/")} className="flex items-center gap-2">
+          <button onClick={() => navigateTo("/")} className="flex items-center gap-2" type="button">
             <Logo size={40} />
             <div className="hidden sm:block text-left">
               <h1 className="text-lg font-bold leading-tight text-foreground">
@@ -111,11 +118,12 @@ export default function TreePage() {
                         <button
                           key={p.id}
                           onClick={() => {
-                            navigateTo(`/person/${p.id}`);
+                            navigateToPerson(p.id);
                             setSearchQuery("");
                             setShowSearch(false);
                           }}
                           className="w-full rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-primary/10 hover:text-primary"
+                          type="button"
                         >
                           <span className="font-medium text-foreground">
                             {p.firstName} {p.lastName}

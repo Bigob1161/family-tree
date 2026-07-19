@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -15,16 +15,28 @@ export function NeonBackground({ className }: NeonBackgroundProps) {
     setMounted(true);
   }, []);
 
-  const particles = [
-    { size: 4, x: "15%", y: "20%", color: "var(--primary)", delay: 0 },
-    { size: 6, x: "75%", y: "15%", color: "var(--accent)", delay: 1.2 },
-    { size: 3, x: "45%", y: "70%", color: "var(--primary)", delay: 2.1 },
-    { size: 5, x: "85%", y: "60%", color: "var(--accent)", delay: 0.7 },
-    { size: 4, x: "25%", y: "85%", color: "var(--primary)", delay: 1.8 },
-    { size: 7, x: "60%", y: "40%", color: "var(--accent)", delay: 2.8 },
-    { size: 3, x: "90%", y: "85%", color: "var(--primary)", delay: 3.3 },
-    { size: 5, x: "5%", y: "55%", color: "var(--accent)", delay: 2.5 },
-  ];
+  const stars = useMemo(
+    () =>
+      Array.from({ length: 48 }, (_, i) => ({
+        id: i,
+        size: Math.random() * 2 + 1,
+        x: `${Math.random() * 100}%`,
+        y: `${Math.random() * 100}%`,
+        delay: Math.random() * 4,
+        duration: 3 + Math.random() * 4,
+      })),
+    []
+  );
+
+  const orbs = useMemo(
+    () => [
+      { size: 320, x: "15%", y: "25%", color: "var(--accent)", delay: 0 },
+      { size: 420, x: "75%", y: "20%", color: "var(--primary)", delay: 1.5 },
+      { size: 260, x: "45%", y: "75%", color: "var(--accent)", delay: 3 },
+      { size: 360, x: "85%", y: "65%", color: "var(--primary)", delay: 2 },
+    ],
+    []
+  );
 
   return (
     <div
@@ -34,73 +46,92 @@ export function NeonBackground({ className }: NeonBackgroundProps) {
       )}
       aria-hidden="true"
     >
+      <div className="deep-space" />
       <div className="neon-grid" />
 
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at center, transparent 0%, var(--background) 85%)",
+            "radial-gradient(circle at center, transparent 0%, var(--background) 80%)",
         }}
       />
 
       <svg
-        className="absolute inset-0 h-full w-full opacity-30"
+        className="absolute inset-0 h-full w-full opacity-20"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
       >
         <defs>
           <linearGradient id="neonLine" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.6" />
-            <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.5" />
+            <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.25" />
             <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <line
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="100%"
-          stroke="url(#neonLine)"
-          strokeWidth="1"
-        />
-        <line
-          x1="100%"
-          y1="0%"
-          x2="0%"
-          y2="100%"
-          stroke="url(#neonLine)"
-          strokeWidth="1"
-        />
+        <line x1="0%" y1="0%" x2="100%" y2="100%" stroke="url(#neonLine)" strokeWidth="1" />
+        <line x1="100%" y1="0%" x2="0%" y2="100%" stroke="url(#neonLine)" strokeWidth="1" />
       </svg>
 
-      {mounted &&
-        particles.map((p, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              left: p.x,
-              top: p.y,
-              width: p.size * 4,
-              height: p.size * 4,
-              background: p.color,
-              boxShadow: `0 0 ${p.size * 6}px ${p.color}, 0 0 ${p.size * 12}px ${p.color}`,
-            }}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{
-              opacity: [0.3, 0.8, 0.3],
-              scale: [1, 1.4, 1],
-              y: [0, -24, 0],
-            }}
-            transition={{
-              duration: 5 + p.size,
-              repeat: Infinity,
-              delay: p.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
+      {mounted && (
+        <>
+          {orbs.map((orb, i) => (
+            <motion.div
+              key={`orb-${i}`}
+              className="absolute rounded-full blur-3xl"
+              style={{
+                left: orb.x,
+                top: orb.y,
+                width: orb.size,
+                height: orb.size,
+                background: `radial-gradient(circle, ${orb.color} 0%, transparent 70%)`,
+                translateX: "-50%",
+                translateY: "-50%",
+              }}
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{
+                opacity: [0.15, 0.35, 0.15],
+                scale: [1, 1.15, 1],
+                x: ["-50%", "-48%", "-52%", "-50%"],
+                y: ["-50%", "-52%", "-48%", "-50%"],
+              }}
+              transition={{
+                duration: 10 + orb.size / 60,
+                repeat: Infinity,
+                delay: orb.delay,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+
+          <div className="star-field">
+            {stars.map((star) => (
+              <motion.div
+                key={star.id}
+                className="star"
+                style={{
+                  left: star.x,
+                  top: star.y,
+                  width: star.size,
+                  height: star.size,
+                  boxShadow: `0 0 ${star.size * 2}px currentColor`,
+                }}
+                initial={{ opacity: 0.2, scale: 0.5 }}
+                animate={{
+                  opacity: [0.2, 0.9, 0.2],
+                  scale: [1, 1.3, 1],
+                }}
+                transition={{
+                  duration: star.duration,
+                  repeat: Infinity,
+                  delay: star.delay,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

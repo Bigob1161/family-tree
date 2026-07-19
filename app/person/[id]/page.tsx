@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useMemo, useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,7 +31,7 @@ import {
   RELATIONSHIP_LABELS,
 } from "@/lib/types";
 import { calculateAge, formatDateInput, isValidDate, cn } from "@/lib/utils";
-import { navigateTo } from "@/lib/navigate";
+import { navigateTo, navigateToPerson } from "@/lib/navigate";
 import {
   ArrowLeft,
   Calendar,
@@ -42,11 +42,15 @@ import {
   X,
   Users,
   Save,
+  Heart,
+  Share2,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 
-export default function PersonPage() {
-  const { id } = useParams<{ id: string }>();
+function PersonPageInner() {
+  const searchParams = useSearchParams();
+  const rawId = searchParams.get("id");
   const family = useFamilyStore((state) => state.family);
   const people = useFamilyStore((state) => state.family?.people || []);
   const photos = useFamilyStore((state) => state.family?.photos || []);
@@ -55,11 +59,18 @@ export default function PersonPage() {
   const addPhoto = useFamilyStore((state) => state.addPhoto);
   const deletePhoto = useFamilyStore((state) => state.deletePhoto);
   const [isEditing, setIsEditing] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const person = useMemo(
-    () => people.find((p) => p.id === id),
-    [people, id]
+    () => people.find((p) => p.id === rawId) || people[0],
+    [people, rawId]
   );
+
+  const id = person?.id ?? rawId ?? "";
 
   const parent = useMemo(
     () => people.find((p) => p.id === person?.parentId),
@@ -71,54 +82,25 @@ export default function PersonPage() {
     [people, id]
   );
 
+  const siblings = useMemo(
+    () => people.filter((p) => p.parentId && p.parentId === person?.parentId && p.id !== id),
+    [people, person, id]
+  );
+
   const personPhotos = useMemo(
     () => photos.filter((p) => p.personId === id),
     [photos, id]
   );
 
   const [editForm, setEditForm] = useState<Partial<Person>>(() => person || {});
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (person) setEditForm(person);
   }, [person?.id]);
 
-  if (!family || !person) {
-    return (
-      <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
-        <NeonBackground />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative z-10 flex flex-col items-center gap-4"
-        >
-          <User className="h-20 w-20 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
-          <h2 className="text-2xl font-bold text-foreground">Человек не найден</h2>
-          <p className="max-w-sm text-muted-foreground">
-            Вернитесь к семейному древу или создайте новую семью.
-          </p>
-          <Button
-            size="lg"
-            onClick={() => navigateTo("/tree")}
-            className="neon-button mt-2 gap-2 px-6"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            К древу
-          </Button>
-        </motion.div>
-      </div>
-    );
-  }
-
   function handleSave() {
-    const updated: Person = {
-      ...person,
-      ...editForm,
-    } as Person;
+    if (!person) return;
+    const updated: Person = { ...person, ...editForm } as Person;
     if (!updated.firstName.trim() || !updated.lastName.trim()) {
       toast.error("Введите имя и фамилию");
       return;
@@ -154,9 +136,47 @@ export default function PersonPage() {
     addPhoto({ personId: person.id, url, createdAt: Date.now() });
   }
 
-  const age = calculateAge(person.birthDate);
+  function handleShare() {
+    if (!person) return;
+    const text = `${person.firstName} ${person.lastName} — Family Archive`;
+    if (navigator.share) {
+      navigator.share({ title: text, url: window.location.href }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("Ссылка скопирована");
+    }
+  }
+
+  const age = person ? calculateAge(person.birthDate) : null;
 
   if (!mounted) return null;
+
+  if (!family || !person) {
+    return (
+      <div className="relative flex h-screen flex-col items-center justify-center gap-6 px-6 text-center carpet-texture">
+        <NeonBackground />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative z-10 flex flex-col items-center gap-4"
+        >
+          <User className="h-20 w-20 text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]" />
+          <h2 className="text-2xl font-bold text-foreground">Человек не найден</h2>
+          <p className="max-w-sm text-muted-foreground">
+            Вернитесь к семейному древу или создайте новую семью.
+          </p>
+          <Button
+            size="lg"
+            onClick={() => navigateTo("/tree")}
+            className="neon-button mt-2 gap-2 px-6"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            К древу
+          </Button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen carpet-texture">
@@ -173,6 +193,14 @@ export default function PersonPage() {
           <h1 className="text-lg font-bold text-foreground">Профиль</h1>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleShare}
+            className="text-foreground hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_12px_rgba(0,243,255,0.2)]"
+          >
+            <Share2 className="h-5 w-5" />
+          </Button>
           <Button
             variant="ghost"
             size="icon"
@@ -299,10 +327,7 @@ export default function PersonPage() {
           )}
 
           {isEditing && (
-            <Button
-              onClick={handleSave}
-              className="neon-button w-full"
-            >
+            <Button onClick={handleSave} className="neon-button w-full">
               <Save className="mr-2 h-4 w-4" />
               Сохранить изменения
             </Button>
@@ -326,7 +351,7 @@ export default function PersonPage() {
                 </div>
               </div>
               {personPhotos.length === 0 ? (
-                <div className="rounded-lg border border-dashed border-primary/30 bg-background/80 focus:border-primary focus:ring-primary/30/50 p-8 text-center text-muted-foreground">
+                <div className="rounded-lg border border-dashed border-primary/30 bg-background/80 p-8 text-center text-muted-foreground">
                   В личной галерее пока нет фотографий
                 </div>
               ) : (
@@ -343,10 +368,52 @@ export default function PersonPage() {
             </CardContent>
           </Card>
 
+          {siblings.length > 0 && (
+            <Card className="neon-card border-0">
+              <CardContent className="p-6">
+                <div className="mb-4 flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-accent" />
+                  <h3 className="text-lg font-semibold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Братья и сестры</h3>
+                </div>
+                <div className="space-y-2">
+                  {siblings.map((sibling) => (
+                    <button
+                      key={sibling.id}
+                      onClick={() => navigateToPerson(sibling.id)}
+                      className="w-full text-left"
+                      type="button"
+                    >
+                      <div className="neon-card flex items-center gap-3 border p-3 transition-colors hover:border-primary hover:bg-primary/5">
+                        <PersonAvatar
+                          src={sibling.photoUrl}
+                          name={`${sibling.firstName} ${sibling.lastName}`}
+                          size="sm"
+                        />
+                        <div>
+                          <p className="font-medium text-foreground">
+                            {sibling.firstName} {sibling.lastName}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {calculateAge(sibling.birthDate) !== null
+                              ? `${calculateAge(sibling.birthDate)} лет`
+                              : RELATIONSHIP_LABELS[sibling.relationshipType]}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <Card className="neon-card border-0">
             <CardContent className="p-6">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Дети и родственники</h3>
+                <div className="flex items-center gap-2">
+                  <Heart className="h-5 w-5 text-destructive" />
+                  <h3 className="text-lg font-semibold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Дети и родственники</h3>
+                </div>
                 <AddPersonDialog defaultParentId={person.id}>
                   <Button variant="outline" size="sm" className="gap-1 neon-button bg-background/60 hover:text-background">
                     <User className="h-4 w-4" />
@@ -363,7 +430,7 @@ export default function PersonPage() {
                   {children.map((child) => (
                     <button
                       key={child.id}
-                      onClick={() => navigateTo(`/person/${child.id}`)}
+                      onClick={() => navigateToPerson(child.id)}
                       className="w-full text-left"
                       type="button"
                     >
@@ -393,6 +460,14 @@ export default function PersonPage() {
         </motion.div>
       </main>
     </div>
+  );
+}
+
+export default function PersonPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <PersonPageInner />
+    </Suspense>
   );
 }
 

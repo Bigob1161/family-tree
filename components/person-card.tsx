@@ -68,7 +68,6 @@ export function PersonCard({
           e.stopPropagation();
           onClick?.();
         }}
-        onMouseDown={(e) => e.preventDefault()}
         style={style}
         className={cn(
           "group absolute cursor-grab select-none transition-all duration-200 ease-out active:cursor-grabbing hover:z-10 hover:scale-105 hover:-translate-y-1.5",

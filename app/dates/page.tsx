@@ -10,7 +10,7 @@ import { OrnamentDivider } from "@/components/ornament";
 import { PersonAvatar } from "@/components/person-avatar";
 import { useFamilyStore } from "@/lib/store";
 import { parseDateParts } from "@/lib/utils";
-import { navigateTo } from "@/lib/navigate";
+import { navigateTo, navigateToPerson } from "@/lib/navigate";
 import { ArrowLeft, Cake } from "lucide-react";
 
 function getDaysUntilBirthday(day: number, month: number): number {
@@ -120,7 +120,7 @@ export default function DatesPage() {
                   transition={{ delay: index * 0.05 }}
                 >
                   <button
-                    onClick={() => navigateTo(`/person/${item.person.id}`)}
+                    onClick={() => navigateToPerson(item.person.id)}
                     className="w-full text-left"
                     type="button"
                   >

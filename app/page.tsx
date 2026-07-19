@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
@@ -8,25 +8,39 @@ import { OrnamentDivider } from "@/components/ornament";
 import { NeonBackground } from "@/components/neon-background";
 import { useFamilyStore } from "@/lib/store";
 import { navigateTo } from "@/lib/navigate";
-import { TreePine, Users } from "lucide-react";
+import { TreePine, Users, Sparkles, Shield } from "lucide-react";
 
 export default function LandingPage() {
   const family = useFamilyStore((state) => state.family);
   const createFamily = useFamilyStore((state) => state.createFamily);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (family) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (family && mounted) {
       navigateTo("/tree");
     }
-  }, [family]);
+  }, [family, mounted]);
 
   function handleCreate() {
     createFamily("Моя семья");
     navigateTo("/tree");
   }
 
+  if (!mounted) {
+    return (
+      <div className="relative flex min-h-screen items-center justify-center bg-background">
+        <NeonBackground />
+        <Sparkles className="h-10 w-10 animate-pulse text-primary" />
+      </div>
+    );
+  }
+
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden carpet-texture px-6 text-center">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
       <NeonBackground />
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/60" />
@@ -85,7 +99,7 @@ export default function LandingPage() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 pt-8 text-center text-sm text-muted-foreground">
+        <div className="grid grid-cols-2 gap-4 pt-8 text-center text-sm text-muted-foreground sm:grid-cols-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -112,6 +126,15 @@ export default function LandingPage() {
           >
             <div className="text-2xl font-bold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.6)]">📅</div>
             <div>Хронология</div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="neon-card rounded-xl p-4"
+          >
+            <Shield className="mx-auto h-7 w-7 text-accent" />
+            <div>Локальное хранение</div>
           </motion.div>
         </div>
       </motion.div>

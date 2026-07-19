@@ -43,6 +43,15 @@ export interface Family {
   photos: Photo[];
 }
 
+export interface FamilyEvent {
+  id: string;
+  personId: string;
+  title: string;
+  date: string; // DD.MM.YYYY
+  type: "birth" | "wedding" | "death" | "other";
+  description?: string;
+}
+
 export const RELATIONSHIP_LABELS: Record<RelationshipType, string> = {
   father: "Отец",
   mother: "Мать",

@@ -10,7 +10,7 @@ import { OrnamentDivider } from "@/components/ornament";
 import { PersonAvatar } from "@/components/person-avatar";
 import { useFamilyStore } from "@/lib/store";
 import { parseDateParts } from "@/lib/utils";
-import { navigateTo } from "@/lib/navigate";
+import { navigateTo, navigateToPerson } from "@/lib/navigate";
 import { ArrowLeft, Calendar } from "lucide-react";
 
 export default function TimelinePage() {
@@ -114,7 +114,7 @@ export default function TimelinePage() {
                 >
                   <div className="absolute -left-3 top-4 h-3 w-3 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_10px_rgba(0,243,255,0.5)] ring-2 ring-background" />
                   <button
-                    onClick={() => navigateTo(`/person/${event.person.id}`)}
+                    onClick={() => navigateToPerson(event.person.id)}
                     className="w-full text-left"
                     type="button"
                   >

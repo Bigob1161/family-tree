@@ -1,16 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/logo";
 import { OrnamentDivider } from "@/components/ornament";
 import { NeonBackground } from "@/components/neon-background";
 import { useFamilyStore } from "@/lib/store";
 import { calculateAge } from "@/lib/utils";
 import { navigateTo } from "@/lib/navigate";
-import { ArrowLeft, Moon, Trash2, BarChart3, CalendarDays, History } from "lucide-react";
+import { ArrowLeft, Moon, Trash2, BarChart3, CalendarDays, History, Download, Upload, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SettingsPage() {
@@ -20,6 +22,8 @@ export default function SettingsPage() {
   const darkMode = useFamilyStore((state) => state.darkMode);
   const toggleDarkMode = useFamilyStore((state) => state.toggleDarkMode);
   const deletePerson = useFamilyStore((state) => state.deletePerson);
+  const setFamily = useFamilyStore((state) => state.setFamily);
+  const [importText, setImportText] = useState("");
 
   if (!family) {
     return (
@@ -60,10 +64,33 @@ export default function SettingsPage() {
   function handleClear() {
     if (confirm("Удалить всех родственников и фотографии?")) {
       for (const person of people) deletePerson(person.id);
-      toggleDarkMode();
-      toggleDarkMode();
       toast.success("Данные очищены");
       navigateTo("/");
+    }
+  }
+
+  function handleExport() {
+    const data = JSON.stringify({ family, photos }, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `family-archive-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Архив экспортирован");
+  }
+
+  function handleImport() {
+    try {
+      const parsed = JSON.parse(importText);
+      if (!parsed.family) throw new Error("Неверный формат");
+      setFamily(parsed.family);
+      setImportText("");
+      toast.success("Архив импортирован");
+      navigateTo("/tree");
+    } catch {
+      toast.error("Не удалось импортировать JSON");
     }
   }
 
@@ -88,7 +115,7 @@ export default function SettingsPage() {
               <Logo size={80} />
               <h2 className="text-2xl font-bold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">Family Archive</h2>
               <OrnamentDivider className="w-32" />
-              <p className="text-sm text-muted-foreground">Версия 1.0.0 · Цифровой архив рода</p>
+              <p className="text-sm text-muted-foreground">Версия 1.1.0 · Цифровой архив рода</p>
             </CardContent>
           </Card>
 
@@ -137,6 +164,31 @@ export default function SettingsPage() {
                   <span className="text-foreground">Темная тема</span>
                 </div>
                 <Switch checked={darkMode} onCheckedChange={toggleDarkMode} />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="neon-card border-0">
+            <CardContent className="space-y-4 p-6">
+              <h3 className="flex items-center gap-2 text-lg font-semibold text-primary drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]">
+                <Sparkles className="h-5 w-5" />
+                Резервная копия
+              </h3>
+              <Button onClick={handleExport} className="neon-button w-full gap-2">
+                <Download className="h-4 w-4" />
+                Экспортировать JSON
+              </Button>
+              <div className="space-y-2">
+                <Input
+                  value={importText}
+                  onChange={(e) => setImportText(e.target.value)}
+                  placeholder="Вставьте JSON для импорта..."
+                  className="border-primary/30 bg-background/80 focus:border-primary focus:ring-primary/30"
+                />
+                <Button onClick={handleImport} disabled={!importText.trim()} className="neon-button w-full gap-2">
+                  <Upload className="h-4 w-4" />
+                  Импортировать
+                </Button>
               </div>
             </CardContent>
           </Card>

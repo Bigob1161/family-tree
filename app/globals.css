@@ -49,24 +49,24 @@
 }
 
 :root {
-  --background: #050509;
-  --foreground: #e0e7ff;
-  --card: #0b0b14;
-  --card-foreground: #e0e7ff;
-  --popover: #0b0b14;
-  --popover-foreground: #e0e7ff;
+  --background: #07070d;
+  --foreground: #e8ecff;
+  --card: #0c0c18;
+  --card-foreground: #e8ecff;
+  --popover: #0c0c18;
+  --popover-foreground: #e8ecff;
   --primary: #00f3ff;
-  --primary-foreground: #050509;
-  --secondary: #1a103c;
-  --secondary-foreground: #e0e7ff;
-  --muted: #11111f;
-  --muted-foreground: #7d83a8;
+  --primary-foreground: #07070d;
+  --secondary: #15102a;
+  --secondary-foreground: #e8ecff;
+  --muted: #121220;
+  --muted-foreground: #7b82b2;
   --accent: #b026ff;
   --accent-foreground: #ffffff;
   --destructive: #ff2a6d;
   --destructive-foreground: #ffffff;
-  --border: rgba(0, 243, 255, 0.22);
-  --input: rgba(0, 243, 255, 0.16);
+  --border: rgba(0, 243, 255, 0.2);
+  --input: rgba(0, 243, 255, 0.14);
   --ring: #00f3ff;
   --chart-1: #00f3ff;
   --chart-2: #b026ff;
@@ -74,48 +74,48 @@
   --chart-4: #05ffa1;
   --chart-5: #ffdc38;
   --radius: 0.75rem;
-  --sidebar: #050509;
-  --sidebar-foreground: #e0e7ff;
+  --sidebar: #07070d;
+  --sidebar-foreground: #e8ecff;
   --sidebar-primary: #00f3ff;
-  --sidebar-primary-foreground: #050509;
-  --sidebar-accent: #11111f;
-  --sidebar-accent-foreground: #e0e7ff;
-  --sidebar-border: rgba(0, 243, 255, 0.22);
+  --sidebar-primary-foreground: #07070d;
+  --sidebar-accent: #121220;
+  --sidebar-accent-foreground: #e8ecff;
+  --sidebar-border: rgba(0, 243, 255, 0.2);
   --sidebar-ring: #00f3ff;
 }
 
 .dark {
-  --background: #020204;
+  --background: #03030a;
   --foreground: #dbeafe;
-  --card: #08080f;
+  --card: #080816;
   --card-foreground: #dbeafe;
-  --popover: #08080f;
+  --popover: #080816;
   --popover-foreground: #dbeafe;
   --primary: #33f8ff;
-  --primary-foreground: #020204;
-  --secondary: #12082d;
+  --primary-foreground: #03030a;
+  --secondary: #110824;
   --secondary-foreground: #dbeafe;
-  --muted: #0a0a15;
+  --muted: #0a0a16;
   --muted-foreground: #6b719e;
   --accent: #c85cff;
   --accent-foreground: #ffffff;
   --destructive: #ff4d87;
   --destructive-foreground: #ffffff;
-  --border: rgba(51, 248, 255, 0.24);
-  --input: rgba(51, 248, 255, 0.18);
+  --border: rgba(51, 248, 255, 0.22);
+  --input: rgba(51, 248, 255, 0.16);
   --ring: #33f8ff;
   --chart-1: #33f8ff;
   --chart-2: #c85cff;
   --chart-3: #ff4d87;
   --chart-4: #2bffb1;
   --chart-5: #ffe45c;
-  --sidebar: #020204;
+  --sidebar: #03030a;
   --sidebar-foreground: #dbeafe;
   --sidebar-primary: #33f8ff;
-  --sidebar-primary-foreground: #020204;
-  --sidebar-accent: #0a0a15;
+  --sidebar-primary-foreground: #03030a;
+  --sidebar-accent: #0a0a16;
   --sidebar-accent-foreground: #dbeafe;
-  --sidebar-border: rgba(51, 248, 255, 0.24);
+  --sidebar-border: rgba(51, 248, 255, 0.22);
   --sidebar-ring: #33f8ff;
 }
 
@@ -156,6 +156,11 @@
   50% { box-shadow: 0 0 22px color-mix(in srgb, var(--primary) 70%, transparent), inset 0 0 14px color-mix(in srgb, var(--primary) 25%, transparent); }
 }
 
+@keyframes stars {
+  from { transform: translateY(0); }
+  to { transform: translateY(-2000px); }
+}
+
 .paper-texture {
   background-image:
     radial-gradient(at 0% 0%, color-mix(in srgb, var(--primary) 12%, transparent) 0px, transparent 50%),
@@ -163,17 +168,44 @@
     radial-gradient(at 50% 50%, color-mix(in srgb, var(--secondary) 15%, transparent) 0px, transparent 60%);
 }
 
+.deep-space {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -30;
+  background:
+    radial-gradient(ellipse at 20% 20%, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, color-mix(in srgb, var(--primary) 14%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--secondary) 22%, transparent) 0%, transparent 60%),
+    var(--background);
+}
+
 .neon-grid {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background-color: var(--background);
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--primary) 8%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--primary) 8%, transparent) 1px, transparent 1px);
-  background-size: 64px 64px;
-  animation: grid-move 6s linear infinite;
   z-index: -20;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--primary) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--primary) 6%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  animation: grid-move 8s linear infinite;
+  mask-image: radial-gradient(circle at center, black 0%, transparent 75%);
+}
+
+.star-field {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -25;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: float 4s ease-in-out infinite;
 }
 
 .carpet-texture {
@@ -206,12 +238,12 @@
 .carpet-card,
 .neon-card {
   position: relative;
-  background: linear-gradient(145deg, var(--card) 0%, color-mix(in srgb, var(--card) 92%, var(--primary)) 100%);
-  border: 1px solid color-mix(in srgb, var(--primary) 45%, var(--border));
+  background: linear-gradient(145deg, var(--card) 0%, color-mix(in srgb, var(--card) 94%, var(--primary)) 100%);
+  border: 1px solid color-mix(in srgb, var(--primary) 40%, var(--border));
   border-radius: var(--radius);
   box-shadow:
-    0 4px 24px -8px color-mix(in srgb, var(--primary) 35%, transparent),
-    inset 0 1px 0 0 color-mix(in srgb, var(--primary) 15%, transparent);
+    0 4px 24px -8px color-mix(in srgb, var(--primary) 30%, transparent),
+    inset 0 1px 0 0 color-mix(in srgb, var(--primary) 12%, transparent);
   transition: all 0.25s ease;
 }
 
@@ -226,7 +258,7 @@
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  opacity: 0.6;
+  opacity: 0.5;
   pointer-events: none;
   z-index: -1;
 }
@@ -234,20 +266,20 @@
 .neon-card:hover {
   border-color: var(--primary);
   box-shadow:
-    0 8px 32px -8px color-mix(in srgb, var(--primary) 55%, transparent),
-    inset 0 1px 0 0 color-mix(in srgb, var(--primary) 25%, transparent);
+    0 8px 32px -8px color-mix(in srgb, var(--primary) 50%, transparent),
+    inset 0 1px 0 0 color-mix(in srgb, var(--primary) 22%, transparent);
   transform: translateY(-2px);
 }
 
 .carpet-button,
 .neon-button {
   position: relative;
-  background: linear-gradient(145deg, color-mix(in srgb, var(--primary) 20%, var(--card)) 0%, color-mix(in srgb, var(--primary) 35%, var(--card)) 100%);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--primary) 18%, var(--card)) 0%, color-mix(in srgb, var(--primary) 32%, var(--card)) 100%);
   border: 1px solid var(--primary);
   color: var(--primary);
   box-shadow:
-    0 0 12px color-mix(in srgb, var(--primary) 40%, transparent),
-    inset 0 0 10px color-mix(in srgb, var(--primary) 15%, transparent);
+    0 0 12px color-mix(in srgb, var(--primary) 35%, transparent),
+    inset 0 0 10px color-mix(in srgb, var(--primary) 12%, transparent);
   transition: all 0.2s ease;
   overflow: hidden;
   z-index: 1;
@@ -260,7 +292,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 35%, transparent), transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 30%, transparent), transparent);
   transition: left 0.4s ease;
   z-index: -1;
 }
@@ -269,7 +301,7 @@
 .neon-button:hover {
   color: var(--background);
   background: var(--primary);
-  box-shadow: 0 0 28px color-mix(in srgb, var(--primary) 70%, transparent);
+  box-shadow: 0 0 28px color-mix(in srgb, var(--primary) 65%, transparent);
 }
 
 .neon-button:hover::before {
@@ -279,7 +311,7 @@
 .carpet-button:active,
 .neon-button:active {
   transform: translateY(1px);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--primary) 50%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--primary) 45%, transparent);
 }
 
 input.date-mask::placeholder {
